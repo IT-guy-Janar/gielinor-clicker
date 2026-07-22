@@ -22,276 +22,163 @@
     --hit:       #9c0d05;
     --locked:    #3a2c1a;
   }
-
   * { box-sizing: border-box; }
-
   html, body {
-    margin: 0;
-    padding: 0;
-    background:
-      radial-gradient(ellipse at 50% -10%, #241708 0%, var(--bg) 60%);
+    margin: 0; padding: 0;
+    background: radial-gradient(ellipse at 50% -10%, #241708 0%, var(--bg) 60%);
     color: var(--ink);
     font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
+    -webkit-font-smoothing: antialiased; min-height: 100vh;
   }
-
-  /* ---- classic RS beveled panel ---- */
   .panel {
-    background:
-      linear-gradient(180deg, var(--wood-lite), var(--wood) 40%, var(--wood-dark));
+    background: linear-gradient(180deg, var(--wood-lite), var(--wood) 40%, var(--wood-dark));
     border: 2px solid var(--bevel-lo);
-    box-shadow:
-      inset 2px 2px 0 var(--bevel-hi),
-      inset -2px -2px 0 var(--bevel-lo),
-      0 6px 16px rgba(0,0,0,.55);
+    box-shadow: inset 2px 2px 0 var(--bevel-hi), inset -2px -2px 0 var(--bevel-lo), 0 6px 16px rgba(0,0,0,.55);
     border-radius: 4px;
   }
-
-  .gold-text {
-    color: var(--gold);
-    text-shadow: 1px 1px 0 #000, 2px 2px 0 rgba(0,0,0,.4);
-  }
+  .gold-text { color: var(--gold); text-shadow: 1px 1px 0 #000, 2px 2px 0 rgba(0,0,0,.4); }
   .shadow-text { text-shadow: 1px 1px 0 #000; }
 
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 18px;
-    margin: 14px auto 10px;
-    max-width: 1160px;
-    flex-wrap: wrap;
-  }
-  header h1 {
-    margin: 0;
-    font-size: clamp(20px, 3.4vw, 30px);
-    letter-spacing: .5px;
-  }
-  header h1 small {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--ink-dim);
-    text-transform: uppercase;
-    text-shadow: none;
-    font-weight: normal;
-    margin-top: 2px;
-  }
+  .ic-svg { display: block; width: 100%; height: 100%; }
 
-  .stats-bar {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+  header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 18px; margin: 14px auto 10px; max-width: 1160px; flex-wrap: wrap;
   }
-  .stat {
-    padding: 8px 14px;
-    text-align: center;
-    min-width: 92px;
+  header h1 { margin: 0; font-size: clamp(20px, 3.4vw, 30px); letter-spacing: .5px; }
+  header h1 small {
+    display: block; font-size: 11px; letter-spacing: 2px; color: var(--ink-dim);
+    text-transform: uppercase; text-shadow: none; font-weight: normal; margin-top: 2px;
   }
-  .stat .label {
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: var(--ink-dim);
-    text-transform: uppercase;
-  }
+  .stats-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat { padding: 8px 14px; text-align: center; min-width: 92px; }
+  .stat .label { font-size: 10px; letter-spacing: 1px; color: var(--ink-dim); text-transform: uppercase; }
   .stat .value { font-size: 18px; font-weight: bold; }
 
   .layout {
-    display: grid;
-    grid-template-columns: 200px 1fr 320px;
-    gap: 14px;
-    max-width: 1160px;
-    margin: 0 auto 40px;
-    padding: 0 14px;
-    align-items: start;
+    display: grid; grid-template-columns: 210px 1fr 330px; gap: 14px;
+    max-width: 1160px; margin: 0 auto 40px; padding: 0 14px; align-items: start;
+  }
+  .col-title {
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim);
+    padding: 10px 12px 6px; text-shadow: 1px 1px 0 #000;
   }
 
-  /* ---------- AREA LIST (left) ---------- */
-  .col-title {
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    padding: 10px 12px 6px;
-    text-shadow: 1px 1px 0 #000;
-  }
+  /* ---------- AREAS ---------- */
   .area-list { padding: 6px; }
   .area-btn {
-    display: block;
-    width: 100%;
-    text-align: left;
+    display: block; width: 100%; text-align: left;
     background: linear-gradient(180deg,#5a4225,#3c2b16);
     border: 2px solid var(--bevel-lo);
     box-shadow: inset 1px 1px 0 var(--bevel-hi), inset -1px -1px 0 var(--bevel-lo);
-    color: var(--ink);
-    border-radius: 3px;
-    padding: 8px 10px;
-    margin: 4px 0;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    transition: filter .12s;
+    color: var(--ink); border-radius: 3px; padding: 8px 10px; margin: 4px 0;
+    cursor: pointer; font-family: inherit; font-size: 13px; transition: filter .12s;
   }
   .area-btn:hover:not(:disabled) { filter: brightness(1.18); }
   .area-btn.active {
     background: linear-gradient(180deg,#7a5a2e,#5a4020);
     box-shadow: inset 1px 1px 0 var(--gold), inset -1px -1px 0 var(--bevel-lo), 0 0 8px rgba(255,204,34,.35);
   }
-  .area-btn:disabled { cursor: not-allowed; color: #6b5a3e; background: var(--locked); box-shadow: inset 1px 1px 0 #4a3a22; }
-  .area-btn .a-name { font-weight: bold; display:flex; justify-content: space-between; align-items:center; }
+  .area-btn:disabled { cursor: not-allowed; color: #8a7657; background: var(--locked); box-shadow: inset 1px 1px 0 #4a3a22; }
+  .area-btn .a-name { font-weight: bold; display:flex; justify-content: space-between; align-items:center; gap:6px; }
+  .area-btn .a-name .lock { width:14px; height:14px; flex:none; opacity:.8; }
   .area-btn .a-sub { font-size: 10px; color: var(--ink-dim); margin-top: 2px; }
-  .area-btn .a-tier { font-size:10px; color: var(--gold); }
+  .area-btn .a-tier { font-size:10px; color: var(--gold); font-weight:bold; }
+  .a-diff { display:flex; gap:3px; margin-top:5px; align-items:center; }
+  .a-diff .lbl { font-size:9px; letter-spacing:1px; color:var(--ink-dim); margin-right:2px; }
+  .pip { width:8px; height:8px; transform:rotate(45deg); background:var(--bevel-lo); border:1px solid #0006; }
+  .pip.on { background:linear-gradient(135deg,#ff6a3d,#c22); box-shadow:0 0 3px rgba(255,90,60,.6); border-color:#0006; }
 
-  /* ---------- COMBAT (center) ---------- */
-  .combat { padding: 16px; position: relative; overflow: hidden; min-height: 460px; }
-  .wave-row {
-    display: flex; justify-content: space-between; align-items:center;
-    font-size: 12px; color: var(--ink-dim); letter-spacing:1px; margin-bottom: 8px;
-  }
+  /* ---------- COMBAT ---------- */
+  .combat { padding: 16px; position: relative; overflow: hidden; min-height: 470px; }
+  .wave-row { display: flex; justify-content: space-between; align-items:center; font-size: 12px; color: var(--ink-dim); letter-spacing:1px; margin-bottom: 8px; }
   .boss-flag { color: #ff6a3d; font-weight: bold; text-shadow: 1px 1px 0 #000; }
-
   .monster-name { text-align:center; font-size: 22px; font-weight: bold; margin: 4px 0 2px; }
-  .monster-sub  { text-align:center; font-size: 12px; color: var(--ink-dim); margin-bottom: 10px; }
-
-  .monster-stage {
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-    height: 230px;
-    margin: 0 auto 12px;
-    user-select: none;
-  }
+  .monster-sub  { text-align:center; font-size: 12px; color: var(--ink-dim); margin-bottom: 6px; }
+  .monster-stage { position: relative; display: flex; align-items: center; justify-content: center; height: 220px; margin: 0 auto 12px; user-select: none; }
   .monster {
-    font-size: 150px;
-    line-height: 1;
-    cursor: pointer;
-    filter: drop-shadow(0 12px 10px rgba(0,0,0,.6));
-    transition: transform .05s;
+    width: 168px; height: 168px; cursor: pointer;
+    filter: drop-shadow(0 12px 10px rgba(0,0,0,.6)); transition: transform .05s;
   }
   .monster:active { transform: scale(.92); }
-  .monster.boss { font-size: 172px; }
+  .monster.boss { width: 196px; height: 196px; filter: drop-shadow(0 0 14px rgba(255,80,40,.55)) drop-shadow(0 10px 10px rgba(0,0,0,.6)); }
   .monster.hurt { animation: shake .18s; }
-  @keyframes shake {
-    0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)}
-    50%{transform:translateX(6px)} 75%{transform:translateX(-4px)}
-  }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 50%{transform:translateX(6px)} 75%{transform:translateX(-4px)} }
   .monster.dying { animation: die .35s forwards; }
-  @keyframes die {
-    to { transform: scale(.2) rotate(20deg); opacity: 0; }
-  }
+  @keyframes die { to { transform: scale(.2) rotate(20deg); opacity: 0; } }
 
-  /* hitsplat: the signature OSRS moment */
   .hitsplat {
-    position: absolute;
-    min-width: 34px; height: 34px;
-    padding: 0 6px;
+    position: absolute; min-width: 34px; height: 34px; padding: 0 6px;
     display:flex; align-items:center; justify-content:center;
-    background: var(--hit);
-    color: #fff; font-weight: bold; font-size: 15px;
-    border-radius: 50%;
-    box-shadow: 0 0 0 2px #000 inset, 0 2px 4px rgba(0,0,0,.5);
-    pointer-events: none;
-    text-shadow: 1px 1px 0 #000;
-    animation: splat .8s ease-out forwards;
-    z-index: 5;
+    background: var(--hit); color: #fff; font-weight: bold; font-size: 15px;
+    border-radius: 50%; box-shadow: 0 0 0 2px #000 inset, 0 2px 4px rgba(0,0,0,.5);
+    pointer-events: none; text-shadow: 1px 1px 0 #000; animation: splat .8s ease-out forwards; z-index: 5;
   }
   .hitsplat.crit { background:#d38900; font-size:18px; min-width:40px; height:40px; }
   .hitsplat.zero { background:#0d5b9c; }
   @keyframes splat {
-    0%   { transform: translate(-50%,-50%) scale(.4); opacity: 0; }
-    18%  { transform: translate(-50%,-60%) scale(1.15); opacity: 1; }
-    100% { transform: translate(-50%,-150%) scale(.9); opacity: 0; }
+    0%{ transform: translate(-50%,-50%) scale(.4); opacity: 0; }
+    18%{ transform: translate(-50%,-60%) scale(1.15); opacity: 1; }
+    100%{ transform: translate(-50%,-150%) scale(.9); opacity: 0; }
   }
-
   .gold-drop {
-    position:absolute; pointer-events:none; z-index:6;
-    color: var(--gold); font-weight:bold; font-size: 16px;
-    text-shadow: 1px 1px 0 #000, 0 0 6px rgba(255,204,34,.6);
+    position:absolute; pointer-events:none; z-index:6; color: var(--gold);
+    font-weight:bold; font-size: 16px; text-shadow: 1px 1px 0 #000, 0 0 6px rgba(255,204,34,.6);
     animation: floatup 1.1s ease-out forwards;
   }
-  @keyframes floatup {
-    0%{ transform: translate(-50%,0); opacity:0; }
-    15%{ opacity:1; }
-    100%{ transform: translate(-50%,-70px); opacity:0; }
-  }
+  @keyframes floatup { 0%{ transform: translate(-50%,0); opacity:0; } 15%{ opacity:1; } 100%{ transform: translate(-50%,-70px); opacity:0; } }
 
-  /* health bar */
-  .hp-wrap {
-    height: 26px; border: 2px solid var(--bevel-lo); border-radius: 3px;
-    background: #200; position: relative; overflow:hidden;
-    box-shadow: inset 1px 1px 0 var(--bevel-hi);
-    margin: 0 auto; max-width: 460px;
-  }
-  .hp-fill {
-    height: 100%;
-    background: linear-gradient(180deg, #58c758, var(--hp-good));
-    width: 100%; transition: width .08s linear;
-  }
-  .hp-text {
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-size: 13px; font-weight: bold; color:#fff; text-shadow: 1px 1px 0 #000;
-  }
-
+  .hp-wrap { height: 26px; border: 2px solid var(--bevel-lo); border-radius: 3px; background: #200; position: relative; overflow:hidden; box-shadow: inset 1px 1px 0 var(--bevel-hi); margin: 0 auto; max-width: 460px; }
+  .hp-fill { height: 100%; background: linear-gradient(180deg, #58c758, var(--hp-good)); width: 100%; transition: width .08s linear; }
+  .hp-text { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size: 13px; font-weight: bold; color:#fff; text-shadow: 1px 1px 0 #000; }
   .dps-note { text-align:center; font-size: 12px; color: var(--ink-dim); margin-top: 12px; }
   .click-hint { text-align:center; font-size: 11px; color: var(--gold-dim); margin-top: 4px; letter-spacing:1px; }
 
-  /* ---------- SHOP (right) ---------- */
+  /* ---------- SHOP ---------- */
   .shop { padding: 8px; }
   .tabs { display:flex; gap:4px; padding: 6px 6px 0; }
   .tab {
-    flex:1; padding: 8px 4px; cursor:pointer; text-align:center;
-    font-size: 12px; font-weight:bold; letter-spacing:.5px;
-    background: linear-gradient(180deg,#3c2b16,#2a1d10);
-    border: 2px solid var(--bevel-lo); border-bottom:none;
+    flex:1; padding: 8px 4px; cursor:pointer; text-align:center; font-size: 12px; font-weight:bold; letter-spacing:.3px;
+    background: linear-gradient(180deg,#3c2b16,#2a1d10); border: 2px solid var(--bevel-lo); border-bottom:none;
     border-radius: 4px 4px 0 0; color: var(--ink-dim);
   }
   .tab.active { background: linear-gradient(180deg,#6b4f2c,#4a3620); color: var(--gold); }
-  .tab-body { padding: 8px; max-height: 520px; overflow-y:auto; }
+  .tab-body { padding: 8px; max-height: 540px; overflow-y:auto; }
 
   .buy {
-    display:flex; align-items:center; gap:10px;
-    width:100%; text-align:left; cursor:pointer;
-    background: linear-gradient(180deg,#5a4225,#3c2b16);
-    border: 2px solid var(--bevel-lo);
+    display:flex; align-items:center; gap:10px; width:100%; text-align:left; cursor:pointer;
+    background: linear-gradient(180deg,#5a4225,#3c2b16); border: 2px solid var(--bevel-lo);
     box-shadow: inset 1px 1px 0 var(--bevel-hi), inset -1px -1px 0 var(--bevel-lo);
-    color: var(--ink); border-radius: 3px;
-    padding: 9px 10px; margin: 5px 0; font-family: inherit;
-    transition: filter .1s;
+    color: var(--ink); border-radius: 3px; padding: 9px 10px; margin: 5px 0; font-family: inherit; transition: filter .1s;
   }
   .buy:hover:not(:disabled){ filter: brightness(1.15); }
-  .buy:disabled{ opacity:.5; cursor:not-allowed; }
+  .buy:disabled{ opacity:.55; cursor:not-allowed; }
   .buy.owned{ border-color: var(--gold-dim); box-shadow: inset 1px 1px 0 var(--gold), inset -1px -1px 0 var(--bevel-lo); }
-  .buy .ico { font-size: 26px; width: 34px; text-align:center; flex:none; }
+  .buy .ico { width: 36px; height: 36px; flex:none; }
   .buy .info { flex:1; min-width:0; }
-  .buy .b-name { font-weight:bold; font-size: 13px; }
-  .buy .b-desc { font-size: 11px; color: var(--ink-dim); }
-  .buy .b-cost { font-size: 12px; font-weight:bold; white-space:nowrap; }
+  /* THE FORMATTING FIX: name and each description line each sit on their own line */
+  .buy .b-name { display:block; font-weight:bold; font-size: 13px; margin-bottom:1px; }
+  .buy .b-line { display:block; font-size: 11px; color: var(--ink-dim); line-height:1.35; }
+  .buy .b-line.boost { color: var(--gold); }
+  .buy .b-cost { display:block; font-size: 12px; font-weight:bold; white-space:nowrap; text-align:right; }
   .buy .b-owned { font-size:10px; color: var(--gold); }
+  .buy .b-tag { font-size:10px; color: var(--gold); font-weight:normal; }
+  .coin::before { content:"\25C9"; color: var(--gold); margin-right:3px; }
 
-  .coin::before { content:"◉"; color: var(--gold); margin-right:3px; }
-
-  footer {
-    max-width: 1160px; margin: 0 auto 40px; padding: 0 14px;
-    display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
-  }
+  footer { max-width: 1160px; margin: 0 auto 40px; padding: 0 14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
   .mini-btn {
-    background: linear-gradient(180deg,#5a4225,#3c2b16);
-    border:2px solid var(--bevel-lo);
+    background: linear-gradient(180deg,#5a4225,#3c2b16); border:2px solid var(--bevel-lo);
     box-shadow: inset 1px 1px 0 var(--bevel-hi), inset -1px -1px 0 var(--bevel-lo);
-    color: var(--ink); border-radius:3px; padding: 7px 16px; cursor:pointer;
-    font-family:inherit; font-size:12px;
+    color: var(--ink); border-radius:3px; padding: 7px 16px; cursor:pointer; font-family:inherit; font-size:12px;
   }
   .mini-btn:hover{ filter: brightness(1.15); }
   .mini-btn.danger{ color:#ff8a6a; }
 
   #toast {
     position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
-    background: var(--wood-dark); border:2px solid var(--gold-dim);
-    box-shadow: 0 4px 14px rgba(0,0,0,.6);
-    padding: 10px 18px; border-radius: 4px; color: var(--ink);
-    font-size: 13px; opacity:0; pointer-events:none; transition: opacity .25s, transform .25s;
-    z-index: 50; max-width: 90vw; text-align:center;
+    background: var(--wood-dark); border:2px solid var(--gold-dim); box-shadow: 0 4px 14px rgba(0,0,0,.6);
+    padding: 10px 18px; border-radius: 4px; color: var(--ink); font-size: 13px;
+    opacity:0; pointer-events:none; transition: opacity .25s, transform .25s; z-index: 50; max-width: 90vw; text-align:center;
   }
   #toast.show{ opacity:1; transform: translateX(-50%) translateY(-6px); }
 
@@ -305,59 +192,36 @@
 <body>
 
 <header>
-  <h1 class="gold-text">Gielinor Clicker
-    <small>An idle adventure across the realm</small>
-  </h1>
+  <h1 class="gold-text">Gielinor Clicker<small>An idle adventure across the realm</small></h1>
   <div class="stats-bar">
-    <div class="stat panel">
-      <div class="label">Gold</div>
-      <div class="value gold-text" id="stat-gold">0</div>
-    </div>
-    <div class="stat panel">
-      <div class="label">Per Click</div>
-      <div class="value shadow-text" id="stat-click">1</div>
-    </div>
-    <div class="stat panel">
-      <div class="label">Damage / sec</div>
-      <div class="value shadow-text" id="stat-dps">0</div>
-    </div>
-    <div class="stat panel">
-      <div class="label">Kills</div>
-      <div class="value shadow-text" id="stat-kills">0</div>
-    </div>
+    <div class="stat panel"><div class="label">Gold</div><div class="value gold-text" id="stat-gold">0</div></div>
+    <div class="stat panel"><div class="label">Per Click</div><div class="value shadow-text" id="stat-click">1</div></div>
+    <div class="stat panel"><div class="label">Damage / sec</div><div class="value shadow-text" id="stat-dps">0</div></div>
+    <div class="stat panel"><div class="label">Kills</div><div class="value shadow-text" id="stat-kills">0</div></div>
   </div>
 </header>
 
 <div class="layout">
-  <!-- ---------- AREAS ---------- -->
   <div class="panel">
     <div class="col-title areas-title">Adventure Log</div>
     <div class="area-list" id="area-list"></div>
   </div>
 
-  <!-- ---------- COMBAT ---------- -->
   <div class="panel combat" id="combat">
     <div class="wave-row">
       <span id="wave-label">Wave 1 / 10</span>
-      <span id="boss-flag" class="boss-flag" style="visibility:hidden">⚔ BOSS ⚔</span>
+      <span id="boss-flag" class="boss-flag" style="visibility:hidden">&#9876; BOSS &#9876;</span>
     </div>
     <div class="monster-name shadow-text" id="mon-name">Chicken</div>
-    <div class="monster-sub" id="mon-sub">Lumbridge · Tier I</div>
-
+    <div class="monster-sub" id="mon-sub">Lumbridge &middot; Tier I</div>
     <div class="monster-stage" id="stage">
-      <div class="monster" id="monster" role="button" aria-label="Attack the monster">🐔</div>
+      <div class="monster" id="monster" role="button" aria-label="Attack the monster"></div>
     </div>
-
-    <div class="hp-wrap">
-      <div class="hp-fill" id="hp-fill"></div>
-      <div class="hp-text" id="hp-text">10 / 10</div>
-    </div>
-
+    <div class="hp-wrap"><div class="hp-fill" id="hp-fill"></div><div class="hp-text" id="hp-text">10 / 10</div></div>
     <div class="dps-note" id="dps-note"></div>
     <div class="click-hint">Click the monster to attack!</div>
   </div>
 
-  <!-- ---------- SHOP ---------- -->
   <div class="panel shop">
     <div class="tabs">
       <div class="tab active" data-tab="weapons">Weapons</div>
@@ -370,9 +234,9 @@
 </div>
 
 <footer>
-  <button class="mini-btn" id="save-btn">💾 Save</button>
-  <button class="mini-btn danger" id="reset-btn">🗑 Reset progress</button>
-  <span class="mini-btn" style="cursor:default" id="autosave-note">Autosaves every 15s</span>
+  <button class="mini-btn" id="save-btn">&#128190; Save</button>
+  <button class="mini-btn danger" id="reset-btn">&#128465; Reset progress</button>
+  <span class="mini-btn" style="cursor:default">Autosaves every 15s</span>
 </footer>
 
 <div id="toast"></div>
@@ -381,124 +245,153 @@
 "use strict";
 
 /* =========================================================
+   CUSTOM SVG ICONS  (original OSRS-styled art; {c} = primary colour)
+   Want real sprites instead? Drop images in an /icons folder and swap
+   icon(key,color) below for: '<img src="icons/"+key+".png">'.
+   ========================================================= */
+const ICON = {
+ chicken:`<ellipse cx="35" cy="40" rx="16" ry="13" fill="{c}"/><circle cx="24" cy="27" r="10" fill="{c}"/><path d="M19 17 q2 -7 5 -3 q3 -5 5 1 z" fill="#d23b30"/><polygon points="13,27 5,29 13,32" fill="#e8892a"/><circle cx="21" cy="26" r="1.8" fill="#20140a"/><path d="M49 36 q10 -2 8 10 q-6 -4 -8 -3z" fill="{c}" stroke="#c9bfae" stroke-width="1"/><path d="M28 52 l-3 8 M40 52 l3 8" stroke="#e8892a" stroke-width="3" fill="none"/>`,
+ cow:`<ellipse cx="34" cy="40" rx="18" ry="13" fill="{c}"/><ellipse cx="52" cy="30" rx="9" ry="8" fill="{c}"/><path d="M45 24 q-4 -8 2 -9 M59 24 q4 -8 -2 -9" stroke="#efe7d6" stroke-width="3" fill="none"/><ellipse cx="54" cy="34" rx="4" ry="3" fill="#e59aa6"/><circle cx="50" cy="28" r="1.7" fill="#20140a"/><ellipse cx="24" cy="38" rx="7" ry="6" fill="#3a2c1f"/><ellipse cx="40" cy="46" rx="6" ry="5" fill="#3a2c1f"/><path d="M24 52 v8 M34 53 v8 M44 52 v8" stroke="#d9cdb4" stroke-width="3"/>`,
+ goblin:`<path d="M22 30 q12 -16 20 0 l-3 20 q-7 6 -14 0z" fill="{c}"/><polygon points="20,28 10,22 22,34" fill="{c}"/><polygon points="44,28 54,22 42,34" fill="{c}"/><ellipse cx="27" cy="30" rx="3" ry="4" fill="#ffe36b"/><ellipse cx="37" cy="30" rx="3" ry="4" fill="#ffe36b"/><circle cx="27" cy="31" r="1.5" fill="#20140a"/><circle cx="37" cy="31" r="1.5" fill="#20140a"/><path d="M27 40 q5 4 10 0" stroke="#20140a" stroke-width="2" fill="none"/><rect x="26" y="48" width="12" height="10" rx="2" fill="#7a5a34"/>`,
+ rat:`<ellipse cx="34" cy="42" rx="17" ry="11" fill="{c}"/><circle cx="20" cy="34" r="8" fill="{c}"/><circle cx="16" cy="26" r="5" fill="#b8a488"/><circle cx="26" cy="24" r="5" fill="#b8a488"/><circle cx="15" cy="35" r="1.6" fill="#20140a"/><path d="M12 38 l-6 1 M12 41 l-6 2" stroke="#20140a" stroke-width="1"/><path d="M50 44 q14 2 12 -10" stroke="#caa" stroke-width="3" fill="none"/><polygon points="16,40 19,45 13,45" fill="#efe"/>`,
+ skeleton:`<ellipse cx="32" cy="24" rx="12" ry="13" fill="{c}"/><ellipse cx="27" cy="24" rx="3.4" ry="4.4" fill="#20140a"/><ellipse cx="37" cy="24" rx="3.4" ry="4.4" fill="#20140a"/><polygon points="32,28 29,34 35,34" fill="#20140a"/><path d="M25 36 h14 M23 41 h18 M25 46 h14" stroke="{c}" stroke-width="4" stroke-linecap="round"/><rect x="30" y="34" width="4" height="20" fill="{c}"/>`,
+ zombie:`<path d="M22 26 q10 -12 20 0 l-2 26 q-8 6 -16 0z" fill="{c}"/><circle cx="28" cy="30" r="3.4" fill="#f4f0d8"/><circle cx="28" cy="30" r="1.4" fill="#20140a"/><path d="M36 28 l6 3 l-6 2z" fill="#2c2418"/><path d="M26 40 h12" stroke="#20140a" stroke-width="2"/><path d="M30 42 v3 M34 42 v3" stroke="#20140a" stroke-width="1.4"/><path d="M20 34 l-8 6 M44 34 l8 8" stroke="{c}" stroke-width="5" stroke-linecap="round"/>`,
+ spider:`<g stroke="{c}" stroke-width="3.4" fill="none" stroke-linecap="round"><path d="M30 34 l-18 -8 M30 38 l-20 0 M30 42 l-18 10"/><path d="M38 34 l18 -8 M38 38 l20 0 M38 42 l18 10"/></g><ellipse cx="34" cy="40" rx="13" ry="11" fill="{c}"/><circle cx="34" cy="27" r="8" fill="{c}"/><circle cx="31" cy="26" r="2" fill="#e23b30"/><circle cx="37" cy="26" r="2" fill="#e23b30"/><circle cx="34" cy="30" r="1.6" fill="#e23b30"/>`,
+ giant:`<rect x="22" y="30" width="22" height="26" rx="6" fill="{c}"/><circle cx="33" cy="22" r="10" fill="{c}"/><circle cx="29" cy="21" r="1.9" fill="#20140a"/><circle cx="38" cy="21" r="1.9" fill="#20140a"/><path d="M28 27 q5 3 10 0" stroke="#20140a" stroke-width="2" fill="none"/><rect x="12" y="34" width="8" height="22" rx="3" fill="{c}"/><rect x="46" y="34" width="8" height="22" rx="3" fill="{c}"/><rect x="49" y="18" width="5" height="20" rx="2" fill="#7a5a34" transform="rotate(20 51 28)"/>`,
+ scorpion:`<ellipse cx="30" cy="42" rx="15" ry="8" fill="{c}"/><path d="M16 40 q-10 -2 -10 -12 q0 -6 6 -4" stroke="{c}" stroke-width="5" fill="none" stroke-linecap="round"/><polygon points="6,24 2,20 9,21" fill="#d23b30"/><path d="M44 40 q10 -3 14 3 M44 44 q10 3 14 -2" stroke="{c}" stroke-width="4" fill="none" stroke-linecap="round"/><polygon points="56,36 62,32 60,40" fill="{c}"/><polygon points="56,50 62,54 60,46" fill="{c}"/><path d="M20 48 l-4 8 M30 50 l0 8 M40 48 l4 8" stroke="{c}" stroke-width="3"/>`,
+ bat:`<path d="M32 34 q-22 -18 -28 2 q12 -4 16 6z" fill="{c}"/><path d="M32 34 q22 -18 28 2 q-12 -4 -16 6z" fill="{c}"/><ellipse cx="32" cy="38" rx="8" ry="11" fill="{c}"/><polygon points="26,28 24,20 30,27" fill="{c}"/><polygon points="38,28 40,20 34,27" fill="{c}"/><circle cx="29" cy="36" r="1.8" fill="#ffe36b"/><circle cx="35" cy="36" r="1.8" fill="#ffe36b"/><path d="M30 44 l2 3 l2 -3" fill="#fff"/>`,
+ warrior:`<rect x="24" y="30" width="18" height="22" rx="4" fill="{c}"/><path d="M24 20 q9 -8 18 0 l0 8 q-9 5 -18 0z" fill="#c4c4cc"/><rect x="30" y="26" width="6" height="6" fill="#20140a"/><rect x="10" y="30" width="14" height="18" rx="3" fill="#8a5a2a"/><circle cx="17" cy="39" r="3" fill="#e8d070"/><rect x="47" y="14" width="4" height="34" rx="2" fill="#d8d8e0"/><rect x="44" y="44" width="10" height="4" fill="#8a5a2a"/>`,
+ bird:`<ellipse cx="34" cy="40" rx="11" ry="15" fill="{c}"/><circle cx="34" cy="20" r="8" fill="{c}"/><polygon points="42,20 54,22 42,25" fill="#e8b02a"/><circle cx="36" cy="19" r="1.7" fill="#20140a"/><path d="M24 34 q-12 4 -6 16 q6 -6 12 -6z" fill="{c}" stroke="#0003" stroke-width="1"/><path d="M30 54 l-2 7 M38 54 l2 7" stroke="#e8b02a" stroke-width="3"/>`,
+ kalphite:`<ellipse cx="34" cy="42" rx="16" ry="12" fill="{c}"/><circle cx="34" cy="26" r="10" fill="{c}"/><polygon points="26,20 20,14 28,18" fill="{c}"/><polygon points="42,20 48,14 40,18" fill="{c}"/><circle cx="30" cy="26" r="2" fill="#20140a"/><circle cx="38" cy="26" r="2" fill="#20140a"/><path d="M28 33 l-6 4 M40 33 l6 4" stroke="{c}" stroke-width="3"/><path d="M24 44 h20 M26 49 h16" stroke="#0004" stroke-width="2"/><polygon points="26,16 34,6 42,16" fill="#e8d070"/>`,
+ demon:`<path d="M22 28 q12 -12 20 0 l-1 22 q-9 8 -18 0z" fill="{c}"/><polygon points="20,24 12,10 26,20" fill="{c}"/><polygon points="44,24 52,10 38,20" fill="{c}"/><path d="M18 30 q-14 4 -12 20 q8 -8 14 -8z" fill="{c}" opacity="0.85"/><path d="M46 30 q14 4 12 20 q-8 -8 -14 -8z" fill="{c}" opacity="0.85"/><polygon points="27,30 33,32 27,34" fill="#ffe36b"/><polygon points="37,30 31,32 37,34" fill="#ffe36b"/><path d="M27 42 q5 4 10 0" stroke="#20140a" stroke-width="2" fill="none"/>`,
+ dragon:`<path d="M20 40 q-4 -20 14 -22 q18 0 14 18 q10 -6 12 2 q-6 4 -12 6 q-2 10 -14 10 q-14 0 -14 -14z" fill="{c}"/><polygon points="30,20 28,10 36,18" fill="{c}"/><polygon points="40,20 44,11 46,20" fill="{c}"/><path d="M18 40 q-12 2 -14 14 q10 -4 16 -2z" fill="{c}" opacity="0.9"/><circle cx="46" cy="34" r="2" fill="#ffe36b"/><polygon points="52,36 60,34 54,40" fill="#f4f0d8"/><path d="M20 50 q-8 6 -12 4" stroke="{c}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+ elemental:`<path d="M32 8 q22 6 20 28 q-2 22 -22 20 q-22 -4 -18 -26 q3 -16 20 -22z" fill="{c}" opacity="0.55"/><path d="M32 16 q15 4 14 20 q-2 15 -16 13 q-14 -3 -12 -18 q2 -11 14 -15z" fill="{c}"/><circle cx="32" cy="34" r="7" fill="#f4f0d8"/><circle cx="32" cy="34" r="3" fill="#20140a"/>`,
+ druid:`<path d="M22 54 l4 -30 q6 -8 12 0 l4 30z" fill="{c}"/><path d="M26 26 q6 -10 12 0 q-2 6 -6 6 q-4 0 -6 -6z" fill="#20140a"/><circle cx="32" cy="28" r="2" fill="#8affc0"/><rect x="45" y="12" width="3" height="42" rx="1.5" fill="#7a5a34"/><circle cx="46.5" cy="12" r="5" fill="#8affc0" opacity="0.9"/>`,
+ blob:`<path d="M14 44 q-4 -30 18 -32 q22 2 18 32 q0 8 -18 8 q-18 0 -18 -8z" fill="{c}"/><path d="M22 30 q6 -6 10 0 M36 30 q6 -6 8 2" stroke="#3a1a08" stroke-width="2" fill="none"/><circle cx="26" cy="34" r="2.6" fill="#3a1a08"/><circle cx="40" cy="34" r="2.6" fill="#3a1a08"/><path d="M24 44 q8 6 16 0" stroke="#3a1a08" stroke-width="2.4" fill="none"/><path d="M18 40 l-3 6 M46 40 l3 6 M32 50 l0 6" stroke="#ffd24a" stroke-width="2"/>`,
+ vampire:`<path d="M20 26 q12 -14 24 0 l-2 28 q-10 8 -20 0z" fill="{c}"/><path d="M14 30 l6 -6 l0 30 q-8 -4 -6 -24z" fill="#2a1020"/><path d="M50 30 l-6 -6 l0 30 q8 -4 6 -24z" fill="#2a1020"/><circle cx="27" cy="30" r="2" fill="#d23b30"/><circle cx="37" cy="30" r="2" fill="#d23b30"/><polygon points="29,38 31,43 33,38" fill="#fff"/><polygon points="35,38 33,43 31,38" fill="#fff"/>`,
+ snake:`<path d="M14 52 q-2 -18 14 -18 q14 0 10 -12 q-3 -8 -12 -6" fill="none" stroke="{c}" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="20" r="9" fill="{c}"/><circle cx="25" cy="18" r="1.8" fill="#ffe36b"/><circle cx="31" cy="18" r="1.8" fill="#ffe36b"/><path d="M22 26 q6 4 12 0" stroke="#20140a" stroke-width="1.6" fill="none"/><path d="M28 30 l-2 5 M28 30 l2 5" stroke="#fff" stroke-width="1.2"/>`,
+ dog:`<ellipse cx="36" cy="42" rx="16" ry="10" fill="{c}"/><circle cx="20" cy="34" r="9" fill="{c}"/><polygon points="14,26 12,18 20,25" fill="{c}"/><polygon points="26,26 28,18 22,25" fill="{c}"/><circle cx="16" cy="34" r="1.7" fill="#ffe36b"/><polygon points="8,36 14,34 10,40" fill="#20140a"/><path d="M24 40 h8" stroke="#20140a" stroke-width="1.6"/><path d="M22 50 v8 M34 50 v8 M46 48 v8" stroke="{c}" stroke-width="4"/><path d="M52 40 q10 -2 8 -12" stroke="{c}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+ general:`<rect x="20" y="30" width="26" height="26" rx="5" fill="{c}"/><circle cx="33" cy="20" r="11" fill="{c}"/><polygon points="24,16 20,8 28,14" fill="#f4f0d8"/><polygon points="42,16 46,8 38,14" fill="#f4f0d8"/><circle cx="29" cy="20" r="2" fill="#d23b30"/><circle cx="38" cy="20" r="2" fill="#d23b30"/><rect x="12" y="34" width="9" height="20" rx="3" fill="{c}"/><rect x="45" y="34" width="9" height="20" rx="3" fill="{c}"/><rect x="26" y="36" width="14" height="16" fill="#8a6a2a" opacity="0.5"/>`,
+ tortoise:`<path d="M14 44 q0 -20 20 -20 q20 0 20 20 q0 4 -20 4 q-20 0 -20 -4z" fill="{c}"/><path d="M22 40 l6 -10 6 10z M34 40 l6 -10 6 10z" fill="#3a5a24" opacity="0.6"/><circle cx="12" cy="42" r="6" fill="#7a8a4a"/><circle cx="10" cy="41" r="1.5" fill="#20140a"/><path d="M20 48 v7 M32 49 v7 M44 48 v7" stroke="#7a8a4a" stroke-width="4"/>`,
+ bunyip:`<path d="M18 34 q-2 -14 16 -14 q20 0 22 16 q2 12 -16 14 q-20 2 -22 -16z" fill="{c}"/><path d="M52 34 q10 -6 10 -14 q-8 4 -10 8z" fill="{c}"/><circle cx="28" cy="28" r="2" fill="#20140a"/><path d="M20 36 q8 4 16 0" stroke="#20140a" stroke-width="1.6" fill="none"/><path d="M26 24 q6 -6 12 0" stroke="#cfeaff" stroke-width="2" fill="none"/><path d="M18 42 q-6 4 -10 2" stroke="{c}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+ yak:`<ellipse cx="34" cy="42" rx="19" ry="13" fill="{c}"/><circle cx="20" cy="34" r="10" fill="{c}"/><path d="M13 30 q-8 -6 -4 -12 M25 30 q8 -6 4 -12" stroke="#e8e0cc" stroke-width="3" fill="none"/><circle cx="17" cy="34" r="1.8" fill="#20140a"/><path d="M12 40 q-4 6 0 10" stroke="{c}" stroke-width="3" fill="none"/><path d="M24 52 v8 M34 53 v8 M46 51 v8" stroke="#3a2c1f" stroke-width="4"/><path d="M50 40 q6 2 6 10" stroke="{c}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+ titan:`<rect x="22" y="28" width="22" height="28" rx="3" fill="{c}"/><rect x="25" y="16" width="16" height="16" rx="2" fill="{c}"/><rect x="28" y="21" width="4" height="4" fill="#43c4d0"/><rect x="34" y="21" width="4" height="4" fill="#43c4d0"/><rect x="10" y="30" width="10" height="24" rx="2" fill="{c}"/><rect x="46" y="30" width="10" height="24" rx="2" fill="{c}"/><path d="M22 40 h22" stroke="#0004" stroke-width="2"/>`,
+ scimitar:`<path d="M14 50 q6 -34 40 -40 q-6 20 -30 34z" fill="{c}" stroke="#0004" stroke-width="1.5"/><path d="M18 46 q4 -22 28 -30" stroke="#ffffff" stroke-width="1.4" fill="none" opacity="0.5"/><rect x="8" y="46" width="14" height="6" rx="2" fill="#6a4a24" transform="rotate(45 15 49)"/><rect x="6" y="50" width="8" height="12" rx="2" fill="#4a3418" transform="rotate(45 10 56)"/>`,
+ whip:`<rect x="12" y="44" width="10" height="16" rx="3" fill="#2a2a2a" transform="rotate(30 17 52)"/><path d="M20 48 q18 -6 20 -24 q2 -14 -10 -16 q-8 -1 -8 8 q0 7 8 6 q4 0 3 -4" fill="none" stroke="{c}" stroke-width="4" stroke-linecap="round"/><circle cx="33" cy="8" r="3" fill="#e8d070"/>`,
+ claws:`<path d="M18 54 q-2 -30 6 -40 q2 30 -2 42z" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M30 56 q-2 -32 4 -44 q3 32 -1 46z" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M42 54 q-1 -30 6 -40 q2 30 -3 42z" fill="{c}" stroke="#0004" stroke-width="1"/><rect x="16" y="52" width="34" height="8" rx="3" fill="#5a3a1a"/>`,
+ godsword:`<polygon points="32,6 38,44 26,44" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M32 8 v34" stroke="#fff" stroke-width="1.2" opacity="0.6"/><rect x="16" y="44" width="32" height="7" rx="3" fill="#c8a02a"/><rect x="28" y="50" width="8" height="12" rx="2" fill="#8a6a1a"/><circle cx="32" cy="62" r="3.4" fill="#c8a02a"/>`,
+ prayer:`<circle cx="32" cy="16" r="9" fill="none" stroke="{c}" stroke-width="3"/><path d="M24 54 q0 -22 8 -26 q8 4 8 26z" fill="#e8ddc0"/><path d="M32 30 v22" stroke="#b8a878" stroke-width="1.5"/><path d="M26 34 l-4 18 M38 34 l4 18" stroke="#e8ddc0" stroke-width="4" stroke-linecap="round"/>`,
+ ring:`<circle cx="32" cy="40" r="16" fill="none" stroke="{c}" stroke-width="7"/><polygon points="32,10 40,22 32,30 24,22" fill="#d23b30"/><polygon points="32,12 38,22 32,20 26,22" fill="#ff7a70"/>`,
+ book:`<path d="M10 20 q12 -6 22 0 v34 q-10 -5 -22 0z" fill="{c}"/><path d="M54 20 q-12 -6 -22 0 v34 q10 -5 22 0z" fill="{c}" opacity="0.85"/><path d="M32 20 v34" stroke="#5a3a1a" stroke-width="2"/><circle cx="21" cy="34" r="5" fill="#8affc0" opacity="0.85"/><circle cx="43" cy="34" r="5" fill="#8affc0" opacity="0.6"/>`,
+ lock:`<rect x="16" y="30" width="32" height="26" rx="4" fill="{c}"/><path d="M22 30 v-6 a10 10 0 0 1 20 0 v6" fill="none" stroke="{c}" stroke-width="5"/><circle cx="32" cy="42" r="4" fill="#2a1d10"/><rect x="30" y="42" width="4" height="8" fill="#2a1d10"/>`,
+};
+function icon(key, color) {
+  return '<svg viewBox="0 0 64 64" class="ic-svg" xmlns="http://www.w3.org/2000/svg">'
+    + (ICON[key] || '').split('{c}').join(color || '#cccccc') + '</svg>';
+}
+
+/* =========================================================
    GAME DATA
    ========================================================= */
-
-// Weapons: one-time tiered purchases that set base click damage.
 const WEAPONS = [
-  { name:"Fists",             ico:"👊", dmg:1,     cost:0 },
-  { name:"Bronze Scimitar",   ico:"🗡️", dmg:3,     cost:50 },
-  { name:"Iron Scimitar",     ico:"🗡️", dmg:8,     cost:220 },
-  { name:"Steel Scimitar",    ico:"🗡️", dmg:20,    cost:900 },
-  { name:"Black Scimitar",    ico:"🗡️", dmg:45,    cost:3200 },
-  { name:"Mithril Scimitar",  ico:"⚔️", dmg:110,   cost:11000 },
-  { name:"Adamant Scimitar",  ico:"⚔️", dmg:260,   cost:38000 },
-  { name:"Rune Scimitar",     ico:"⚔️", dmg:600,   cost:130000 },
-  { name:"Dragon Scimitar",   ico:"🐲", dmg:1500,  cost:480000 },
-  { name:"Abyssal Whip",      ico:"🪢", dmg:4000,  cost:1800000 },
-  { name:"Dragon Claws",      ico:"🐾", dmg:11000, cost:7000000 },
-  { name:"Armadyl Godsword",  ico:"🌟", dmg:32000, cost:28000000 },
+  { name:"Fists",            ic:"scimitar", c:"#888",     dmg:1,     cost:0 },
+  { name:"Bronze Scimitar",  ic:"scimitar", c:"#b08040",  dmg:3,     cost:50 },
+  { name:"Iron Scimitar",    ic:"scimitar", c:"#a8a8b0",  dmg:8,     cost:220 },
+  { name:"Steel Scimitar",   ic:"scimitar", c:"#d0d0d8",  dmg:20,    cost:900 },
+  { name:"Black Scimitar",   ic:"scimitar", c:"#3a3a42",  dmg:45,    cost:3200 },
+  { name:"Mithril Scimitar", ic:"scimitar", c:"#4a6fd0",  dmg:110,   cost:11000 },
+  { name:"Adamant Scimitar", ic:"scimitar", c:"#3fa06a",  dmg:260,   cost:38000 },
+  { name:"Rune Scimitar",    ic:"scimitar", c:"#43b4c4",  dmg:600,   cost:130000 },
+  { name:"Dragon Scimitar",  ic:"scimitar", c:"#cc4030",  dmg:1500,  cost:480000 },
+  { name:"Abyssal Whip",     ic:"whip",     c:"#7a1f1f",  dmg:4000,  cost:1800000 },
+  { name:"Dragon Claws",     ic:"claws",    c:"#cc4030",  dmg:11000, cost:7000000 },
+  { name:"Armadyl Godsword", ic:"godsword", c:"#e8d070",  dmg:32000, cost:28000000 },
 ];
 
-// Summoning familiars: repeatable auto-damage (DPS). Buy many of each.
 const FAMILIARS = [
-  { key:"wolf",   name:"Spirit Wolf",      ico:"🐺", dps:1,     base:60 },
-  { key:"spider", name:"Spirit Spider",    ico:"🕷️", dps:6,     base:450 },
-  { key:"bird",   name:"Spirit Terrorbird",ico:"🦤", dps:35,    base:3000 },
-  { key:"tort",   name:"War Tortoise",     ico:"🐢", dps:180,   base:20000 },
-  { key:"bunyip", name:"Bunyip",           ico:"🐡", dps:900,   base:130000 },
-  { key:"yak",    name:"Pack Yak",         ico:"🐂", dps:4500,  base:900000 },
-  { key:"titan",  name:"Steel Titan",      ico:"🗿", dps:22000, base:6000000 },
+  { key:"wolf",   name:"Spirit Wolf",       ic:"dog",      c:"#8a8a94", dps:1,     base:60 },
+  { key:"spider", name:"Spirit Spider",     ic:"spider",   c:"#6a5a7a", dps:6,     base:450 },
+  { key:"bird",   name:"Spirit Terrorbird", ic:"bird",     c:"#7ac86a", dps:35,    base:3000 },
+  { key:"tort",   name:"War Tortoise",      ic:"tortoise", c:"#5c7a38", dps:180,   base:20000 },
+  { key:"bunyip", name:"Bunyip",            ic:"bunyip",   c:"#5a9ad0", dps:900,   base:130000 },
+  { key:"yak",    name:"Pack Yak",          ic:"yak",      c:"#6a5a44", dps:4500,  base:900000 },
+  { key:"titan",  name:"Steel Titan",       ic:"titan",    c:"#8a9aa8", dps:22000, base:6000000 },
 ];
 
-// Perks: repeatable multipliers.
 const PERKS = [
-  { key:"strMult",  name:"Prayer: Ultimate Strength", ico:"🙏",
-    desc:"+8% click damage per level", base:200,  growth:1.6, effect:0.08 },
-  { key:"wealth",   name:"Ring of Wealth",            ico:"💍",
-    desc:"+12% gold from all sources",  base:350,  growth:1.7, effect:0.12 },
-  { key:"famMult",  name:"Summoning Mastery",         ico:"📖",
+  { key:"strMult", name:"Prayer: Ultimate Strength", ic:"prayer", c:"#e8d070",
+    desc:"+8% click damage per level", base:200, growth:1.6, effect:0.08 },
+  { key:"wealth",  name:"Ring of Wealth", ic:"ring", c:"#e8d070",
+    desc:"+12% gold from all sources", base:350, growth:1.7, effect:0.12 },
+  { key:"famMult", name:"Summoning Mastery", ic:"book", c:"#b98a45",
     desc:"+10% familiar damage per level", base:500, growth:1.7, effect:0.10 },
 ];
 
-// Areas = repeatable levels. Each has monsters + a boss every 10th wave.
-// hpMul / goldMul set the area's difficulty & reward scale.
+// Areas = repeatable levels. goldMul climbs faster than hpMul, so deeper areas
+// always pay better gold-per-time than farming a low area's high tiers.
 const AREAS = [
   { name:"Lumbridge", hpMul:1, goldMul:1,
-    monsters:[["Chicken","🐔"],["Cow","🐄"],["Goblin","👺"],["Giant Rat","🐀"]],
-    boss:["Evil Chicken","🐓"] },
-  { name:"Varrock Sewers", hpMul:6, goldMul:3,
-    monsters:[["Zombie","🧟"],["Giant Spider","🕷️"],["Skeleton","💀"],["Giant Rat","🐀"]],
-    boss:["Moss Giant","🌿"] },
-  { name:"Al Kharid Desert", hpMul:32, goldMul:9,
-    monsters:[["Scorpion","🦂"],["Giant Bat","🦇"],["Desert Warrior","🗡️"],["Vulture","🦅"]],
-    boss:["Kalphite Queen","👑"] },
-  { name:"Taverley Dungeon", hpMul:170, goldMul:26,
-    monsters:[["Hill Giant","🗿"],["Hellhound","🐕"],["Blue Dragon","🐉"],["Chaos Druid","🧙"]],
-    boss:["Chaos Elemental","🌀"] },
-  { name:"Karamja Volcano", hpMul:900, goldMul:75,
-    monsters:[["Lesser Demon","😈"],["Fire Giant","🔥"],["Greater Demon","👹"],["Lava Beast","🌋"]],
-    boss:["TzTok-Jad","🟠"] },
-  { name:"God Wars Dungeon", hpMul:5000, goldMul:220,
-    monsters:[["Spiritual Warrior","👤"],["Aviansie","🦅"],["Ork","🐗"],["Goblin Guard","🛡️"]],
-    boss:["General Graardor","🐗"] },
-  { name:"Morytania Swamp", hpMul:28000, goldMul:640,
-    monsters:[["Vampyre","🧛"],["Snakeling","🐍"],["Ghoul","🧟"],["Werewolf","🐺"]],
-    boss:["Zulrah","🐍"] },
-  { name:"Ungael Ruins", hpMul:160000, goldMul:1900,
-    monsters:[["Undead Dragon","🐲"],["Skeletal Wyvern","🦴"],["Ice Troll","🧊"],["Wight","☠️"]],
-    boss:["Vorkath","🐲"] },
-  { name:"KBD Lair", hpMul:900000, goldMul:5600,
-    monsters:[["Baby Dragon","🐉"],["Black Demon","👿"],["Poison Spider","🕸️"],["Bone Guardian","🦴"]],
-    boss:["King Black Dragon","🐲"] },
+    monsters:[{n:"Chicken",ic:"chicken",c:"#f2f2ec"},{n:"Cow",ic:"cow",c:"#f0efe8"},{n:"Goblin",ic:"goblin",c:"#5a9e3f"},{n:"Giant Rat",ic:"rat",c:"#9a8763"}],
+    boss:{n:"Evil Chicken",ic:"chicken",c:"#b23a2a"} },
+  { name:"Varrock Sewers", hpMul:6, goldMul:9,
+    monsters:[{n:"Zombie",ic:"zombie",c:"#6d9153"},{n:"Giant Spider",ic:"spider",c:"#3a3340"},{n:"Skeleton",ic:"skeleton",c:"#e8e2d2"},{n:"Giant Rat",ic:"rat",c:"#7a6a4a"}],
+    boss:{n:"Moss Giant",ic:"giant",c:"#4a6a3a"} },
+  { name:"Al Kharid Desert", hpMul:36, goldMul:81,
+    monsters:[{n:"Scorpion",ic:"scorpion",c:"#8a5f2a"},{n:"Giant Bat",ic:"bat",c:"#5a4a3a"},{n:"Desert Warrior",ic:"warrior",c:"#c9a15a"},{n:"Vulture",ic:"bird",c:"#7a5a3a"}],
+    boss:{n:"Kalphite Queen",ic:"kalphite",c:"#d8a83a"} },
+  { name:"Taverley Dungeon", hpMul:216, goldMul:730,
+    monsters:[{n:"Hill Giant",ic:"giant",c:"#9a8a6a"},{n:"Hellhound",ic:"dog",c:"#3a3340"},{n:"Blue Dragon",ic:"dragon",c:"#3a6fd0"},{n:"Chaos Druid",ic:"druid",c:"#6a4a8a"}],
+    boss:{n:"Chaos Elemental",ic:"elemental",c:"#9a5ad0"} },
+  { name:"Karamja Volcano", hpMul:1300, goldMul:6600,
+    monsters:[{n:"Lesser Demon",ic:"demon",c:"#c33a2a"},{n:"Fire Giant",ic:"giant",c:"#c86a2a"},{n:"Greater Demon",ic:"demon",c:"#8a2a1a"},{n:"Lava Beast",ic:"blob",c:"#e07020"}],
+    boss:{n:"TzTok-Jad",ic:"blob",c:"#d24a1a"} },
+  { name:"God Wars Dungeon", hpMul:7800, goldMul:59000,
+    monsters:[{n:"Spiritual Warrior",ic:"warrior",c:"#8a9ac8"},{n:"Aviansie",ic:"bird",c:"#d8d8e0"},{n:"Ork",ic:"goblin",c:"#7a6a4a"},{n:"Goblin Guard",ic:"goblin",c:"#4a8a3a"}],
+    boss:{n:"General Graardor",ic:"general",c:"#8a7a55"} },
+  { name:"Morytania Swamp", hpMul:47000, goldMul:535000,
+    monsters:[{n:"Vampyre",ic:"vampire",c:"#c8c0c8"},{n:"Snakeling",ic:"snake",c:"#3aa06a"},{n:"Ghoul",ic:"zombie",c:"#8a8a6a"},{n:"Werewolf",ic:"dog",c:"#5a4a3a"}],
+    boss:{n:"Zulrah",ic:"snake",c:"#2aa08a"} },
+  { name:"Ungael Ruins", hpMul:280000, goldMul:4800000,
+    monsters:[{n:"Undead Dragon",ic:"dragon",c:"#7a8a6a"},{n:"Skeletal Wyvern",ic:"dragon",c:"#cfc7b0"},{n:"Ice Troll",ic:"giant",c:"#7aa8c8"},{n:"Wight",ic:"skeleton",c:"#b8b0a0"}],
+    boss:{n:"Vorkath",ic:"dragon",c:"#4a5a6a"} },
+  { name:"KBD Lair", hpMul:1700000, goldMul:43000000,
+    monsters:[{n:"Baby Dragon",ic:"dragon",c:"#3a8a5a"},{n:"Black Demon",ic:"demon",c:"#3a3348"},{n:"Poison Spider",ic:"spider",c:"#4a7a2a"},{n:"Bone Guardian",ic:"skeleton",c:"#e8e2d2"}],
+    boss:{n:"King Black Dragon",ic:"dragon",c:"#37344a"} },
 ];
 
-const WAVES_PER_AREA = 10; // 10th wave is the boss
+const WAVES_PER_AREA = 10;
+const TIER_SCALE = 1.5; // applied equally to HP and gold -> efficiency-neutral tiers
+const FAM_MILESTONES = [10, 25, 50, 100, 200, 500, 1000];
 
 /* =========================================================
    STATE
    ========================================================= */
-const SAVE_KEY = "gielinorClickerSave_v1";
-
+const SAVE_KEY = "gielinorClickerSave_v2";
 function freshState() {
   return {
-    gold: 0,
-    totalKills: 0,
-    weaponTier: 0,
-    strengthLevel: 0,                 // flat +click from the Strength tab
-    familiars: {},                    // key -> count
-    perks: { strMult:0, wealth:0, famMult:0 },
-    currentArea: 0,
-    areaTier: {},                     // areaIndex -> times boss cleared
-    unlocked: { 0: true },            // areaIndex -> true
-    wave: 1,                          // 1..10 within current area
+    gold: 0, totalKills: 0, weaponTier: 0, strengthLevel: 0,
+    familiars: {}, perks: { strMult:0, wealth:0, famMult:0 },
+    currentArea: 0, areaTier: {}, unlocked: { 0: true }, wave: 1,
   };
 }
-
 let state = freshState();
-let mon = null;         // { name, ico, maxHp, hp, isBoss }
+let mon = null;
 let shopTab = "weapons";
 
 /* =========================================================
    PERSISTENCE
    ========================================================= */
 function save(silent) {
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-    if (!silent) toast("Game saved.");
-  } catch (e) {
-    if (!silent) toast("Couldn't save (storage blocked in this preview).");
-  }
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); if (!silent) toast("Game saved."); }
+  catch (e) { if (!silent) toast("Couldn't save (storage blocked in this preview)."); }
 }
 function load() {
   try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return false;
+    const raw = localStorage.getItem(SAVE_KEY); if (!raw) return false;
     const s = JSON.parse(raw);
     state = Object.assign(freshState(), s);
     state.perks = Object.assign({ strMult:0, wealth:0, famMult:0 }, s.perks || {});
-    state.familiars = s.familiars || {};
-    state.areaTier = s.areaTier || {};
+    state.familiars = s.familiars || {}; state.areaTier = s.areaTier || {};
     state.unlocked = s.unlocked || { 0:true };
     return true;
   } catch (e) { return false; }
@@ -507,70 +400,53 @@ function load() {
 /* =========================================================
    DERIVED VALUES
    ========================================================= */
-function tierOf(i)      { return state.areaTier[i] || 0; }
-function goldMult()     { return 1 + state.perks.wealth * PERKS[1].effect; }
-function famMult()      { return 1 + state.perks.famMult * PERKS[2].effect; }
-function strMult()      { return 1 + state.perks.strMult * PERKS[0].effect; }
+function tierOf(i)  { return state.areaTier[i] || 0; }
+function goldMult() { return 1 + state.perks.wealth  * PERKS[1].effect; }
+function famMult()  { return 1 + state.perks.famMult * PERKS[2].effect; }
+function strMult()  { return 1 + state.perks.strMult * PERKS[0].effect; }
 
 function clickDamage() {
   const wep = WEAPONS[state.weaponTier].dmg;
   const flat = state.strengthLevel * 2;
   return Math.max(1, Math.floor((wep + flat) * strMult()));
 }
+function famMilestoneMult(count) { let m = 1; for (const t of FAM_MILESTONES) if (count >= t) m *= 2; return m; }
+function famNextMilestone(count) { for (const t of FAM_MILESTONES) if (count < t) return t; return null; }
 function dps() {
   let total = 0;
-  for (const f of FAMILIARS) total += (state.familiars[f.key] || 0) * f.dps;
+  for (const f of FAMILIARS) {
+    const c = state.familiars[f.key] || 0;
+    total += c * f.dps * famMilestoneMult(c);
+  }
   return Math.floor(total * famMult());
 }
-function strengthCost() {
-  return Math.floor(15 * Math.pow(1.14, state.strengthLevel));
-}
-function familiarCost(f) {
-  const owned = state.familiars[f.key] || 0;
-  return Math.floor(f.base * Math.pow(1.15, owned));
-}
-function perkCost(p) {
-  const lvl = state.perks[p.key];
-  return Math.floor(p.base * Math.pow(p.growth, lvl));
-}
+function strengthCost() { return Math.floor(15 * Math.pow(1.14, state.strengthLevel)); }
+function familiarCost(f) { return Math.floor(f.base * Math.pow(1.15, state.familiars[f.key] || 0)); }
+function perkCost(p) { return Math.floor(p.base * Math.pow(p.growth, state.perks[p.key])); }
 
-// scaling for the monster on a given wave of the current area
 function monsterHpFor(area, wave, isBoss) {
-  const a = AREAS[area];
-  const t = tierOf(area);
-  const waveScale = 1 + 0.18 * (wave - 1);
-  const tierScale = Math.pow(1.9, t);        // each clear makes the level meatier
-  let hp = 10 * a.hpMul * waveScale * tierScale;
+  const a = AREAS[area], t = tierOf(area);
+  let hp = 10 * a.hpMul * (1 + 0.18 * (wave - 1)) * Math.pow(TIER_SCALE, t);
   if (isBoss) hp *= 12;
   return Math.max(10, Math.floor(hp));
 }
 function monsterGoldFor(area, wave, isBoss) {
-  const a = AREAS[area];
-  const t = tierOf(area);
-  const tierScale = Math.pow(1.75, t);
-  let g = 5 * a.goldMul * (1 + 0.12 * (wave - 1)) * tierScale;
+  const a = AREAS[area], t = tierOf(area);
+  let g = 5 * a.goldMul * (1 + 0.12 * (wave - 1)) * Math.pow(TIER_SCALE, t);
   if (isBoss) g *= 15;
   return Math.max(1, Math.floor(g * goldMult()));
 }
+function areaDifficulty(i) { return Math.min(5, Math.round((i / (AREAS.length - 1)) * 4) + 1); }
 
 /* =========================================================
    COMBAT
    ========================================================= */
 function spawnMonster() {
-  const area = state.currentArea;
-  const wave = state.wave;
-  const isBoss = wave >= WAVES_PER_AREA;
+  const area = state.currentArea, wave = state.wave, isBoss = wave >= WAVES_PER_AREA;
   const a = AREAS[area];
-  let name, ico;
-  if (isBoss) {
-    [name, ico] = a.boss;
-  } else {
-    const pick = a.monsters[(wave - 1) % a.monsters.length];
-    [name, ico] = pick;
-  }
+  const src = isBoss ? a.boss : a.monsters[(wave - 1) % a.monsters.length];
   const maxHp = monsterHpFor(area, wave, isBoss);
-  mon = { name, ico, maxHp, hp: maxHp, isBoss,
-          gold: monsterGoldFor(area, wave, isBoss) };
+  mon = { name: src.n, ic: src.ic, c: src.c, maxHp, hp: maxHp, isBoss, gold: monsterGoldFor(area, wave, isBoss) };
   renderMonster();
 }
 
@@ -582,66 +458,41 @@ function damageMonster(amount, opts) {
   showHitsplat(amount, opts);
   const el = document.getElementById("monster");
   el.classList.remove("hurt"); void el.offsetWidth; el.classList.add("hurt");
-  if (mon.hp <= 0) killMonster();
-  else updateHp();
+  if (mon.hp <= 0) killMonster(); else updateHp();
 }
-
 function killMonster() {
   deadLock = true;
   const reward = mon.gold;
-  state.gold += reward;
-  state.totalKills += 1;
-
+  state.gold += reward; state.totalKills += 1;
   const el = document.getElementById("monster");
-  el.classList.add("dying");
-  showGoldDrop(reward);
-
-  const wasBoss = mon.isBoss;
-  const area = state.currentArea;
-
+  el.classList.add("dying"); showGoldDrop(reward);
+  const wasBoss = mon.isBoss, area = state.currentArea;
   setTimeout(() => {
     el.classList.remove("dying");
     if (wasBoss) {
-      // clear the level: bump tier, unlock next area, reset waves
       state.areaTier[area] = tierOf(area) + 1;
       if (area + 1 < AREAS.length && !state.unlocked[area + 1]) {
         state.unlocked[area + 1] = true;
-        toast("🗺️ New area unlocked: " + AREAS[area + 1].name + "!");
+        toast("New area unlocked: " + AREAS[area + 1].name + "!");
       } else {
-        toast("🏆 " + AREAS[area].boss[0] + " defeated! Tier " +
-              toRoman(tierOf(area)) + " cleared.");
+        toast(AREAS[area].boss.n + " defeated! Tier " + toRoman(tierOf(area)) + " cleared.");
       }
-      state.wave = 1;
-      renderAreas();
-    } else {
-      state.wave += 1;
-    }
-    deadLock = false;
-    spawnMonster();
-    save(true);
-    refreshStats();
+      state.wave = 1; renderAreas();
+    } else { state.wave += 1; }
+    deadLock = false; spawnMonster(); save(true); refreshStats();
   }, 340);
-
   refreshStats();
 }
-
-/* click + crit handling */
-function onMonsterClick(ev) {
+function onMonsterClick() {
   if (deadLock) return;
-  const crit = Math.random() < 0.10;              // 10% chance for a big hit
-  let dmg = clickDamage();
-  if (crit) dmg = Math.floor(dmg * 3);
-  damageMonster(dmg, { crit, x: ev.offsetX, y: ev.offsetY });
+  const crit = Math.random() < 0.10;
+  let dmg = clickDamage(); if (crit) dmg = Math.floor(dmg * 3);
+  damageMonster(dmg, { crit });
 }
-
-/* DPS tick from familiars, applied 10x/sec */
 function dpsTick() {
   if (deadLock || !mon) return;
-  const perTick = dps() / 10;
-  if (perTick <= 0) return;
-  mon.hp -= perTick;
-  if (mon.hp <= 0) killMonster();
-  else updateHp();
+  const perTick = dps() / 10; if (perTick <= 0) return;
+  mon.hp -= perTick; if (mon.hp <= 0) killMonster(); else updateHp();
 }
 
 /* =========================================================
@@ -649,11 +500,11 @@ function dpsTick() {
    ========================================================= */
 function renderMonster() {
   const el = document.getElementById("monster");
-  el.textContent = mon.ico;
+  el.innerHTML = icon(mon.ic, mon.c);
   el.classList.toggle("boss", mon.isBoss);
   document.getElementById("mon-name").textContent = mon.name;
   document.getElementById("mon-sub").textContent =
-    AREAS[state.currentArea].name + " · Tier " + toRoman(tierOf(state.currentArea) + 1);
+    AREAS[state.currentArea].name + " \u00b7 Tier " + toRoman(tierOf(state.currentArea) + 1);
   document.getElementById("wave-label").textContent =
     mon.isBoss ? "Boss Wave" : ("Wave " + state.wave + " / " + WAVES_PER_AREA);
   document.getElementById("boss-flag").style.visibility = mon.isBoss ? "visible" : "hidden";
@@ -663,101 +514,109 @@ function updateHp() {
   const pct = Math.max(0, mon.hp / mon.maxHp) * 100;
   const fill = document.getElementById("hp-fill");
   fill.style.width = pct + "%";
-  // green -> red as it drops
-  const g = Math.round(0.6 + pct/100 * 0.6 * 255);
-  fill.style.background =
-    "linear-gradient(180deg," +
-    (pct > 50 ? "#58c758,#3fa63f" : pct > 22 ? "#c7a53f,#a67f14" : "#c75050,#a41414") + ")";
+  fill.style.background = "linear-gradient(180deg,"
+    + (pct > 50 ? "#58c758,#3fa63f" : pct > 22 ? "#c7a53f,#a67f14" : "#c75050,#a41414") + ")";
   document.getElementById("hp-text").textContent =
     fmt(Math.max(0, Math.ceil(mon.hp))) + " / " + fmt(mon.maxHp);
 }
-
 function showHitsplat(amount, opts) {
   const stage = document.getElementById("stage");
   const s = document.createElement("div");
   s.className = "hitsplat" + (opts.crit ? " crit" : "") + (amount <= 0 ? " zero" : "");
   s.textContent = fmt(Math.round(amount));
   const rect = stage.getBoundingClientRect();
-  const cx = (opts.x != null ? (rect.width/2 - 80 + opts.x*0.5) : rect.width/2)
-             + (Math.random()*60 - 30);
-  const cy = rect.height/2 + (Math.random()*40 - 20);
-  s.style.left = cx + "px";
-  s.style.top  = cy + "px";
-  stage.appendChild(s);
-  setTimeout(() => s.remove(), 800);
+  s.style.left = (rect.width / 2 + (Math.random() * 70 - 35)) + "px";
+  s.style.top  = (rect.height / 2 + (Math.random() * 50 - 25)) + "px";
+  stage.appendChild(s); setTimeout(() => s.remove(), 800);
 }
 function showGoldDrop(amount) {
   const stage = document.getElementById("stage");
   const d = document.createElement("div");
-  d.className = "gold-drop";
-  d.textContent = "+" + fmt(amount) + " gp";
-  d.style.left = "50%";
-  d.style.top  = "40%";
-  stage.appendChild(d);
-  setTimeout(() => d.remove(), 1100);
+  d.className = "gold-drop"; d.textContent = "+" + fmt(amount) + " gp";
+  d.style.left = "50%"; d.style.top = "38%";
+  stage.appendChild(d); setTimeout(() => d.remove(), 1100);
 }
 
 /* =========================================================
    RENDER — areas
    ========================================================= */
+function diffPips(i) {
+  const d = areaDifficulty(i);
+  let pips = '<span class="lbl">DANGER</span>';
+  for (let k = 1; k <= 5; k++) pips += '<span class="pip' + (k <= d ? ' on' : '') + '"></span>';
+  return '<span class="a-diff">' + pips + '</span>';
+}
 function renderAreas() {
   const list = document.getElementById("area-list");
   list.innerHTML = "";
   AREAS.forEach((a, i) => {
-    const unlocked = !!state.unlocked[i];
+    const unlocked = !!state.unlocked[i], tier = tierOf(i);
     const btn = document.createElement("button");
     btn.className = "area-btn" + (i === state.currentArea ? " active" : "");
     btn.disabled = !unlocked;
-    const tier = tierOf(i);
-    btn.innerHTML =
-      '<span class="a-name">' + (unlocked ? a.name : "🔒 ???") +
-        (unlocked && tier > 0 ? '<span class="a-tier">'+toRoman(tier+1)+'</span>' : '') +
-      '</span>' +
-      '<span class="a-sub">' +
-        (unlocked
-          ? (tier > 0 ? "Cleared ×" + tier + " · Boss: " + a.boss[0] : "Boss: " + a.boss[0])
-          : "Defeat the previous boss") +
-      '</span>';
+    let name, sub;
+    if (unlocked) {
+      name = a.name + (tier > 0 ? '<span class="a-tier">' + toRoman(tier + 1) + '</span>' : '');
+      sub = tier > 0 ? ("Cleared \u00d7" + tier + " \u00b7 Boss: " + a.boss.n) : ("Boss: " + a.boss.n);
+    } else {
+      name = a.name + '<span class="lock">' + icon("lock", "#b7a077") + '</span>';
+      sub = "Locked \u00b7 Defeat " + AREAS[i - 1].boss.n;
+    }
+    btn.innerHTML = '<span class="a-name">' + name + '</span><span class="a-sub">' + sub + '</span>' + diffPips(i);
     if (unlocked) btn.onclick = () => selectArea(i);
     list.appendChild(btn);
   });
 }
 function selectArea(i) {
   if (!state.unlocked[i]) return;
-  state.currentArea = i;
-  state.wave = 1;
-  deadLock = false;
-  renderAreas();
-  spawnMonster();
-  save(true);
+  state.currentArea = i; state.wave = 1; deadLock = false;
+  renderAreas(); spawnMonster(); save(true);
 }
 
 /* =========================================================
    RENDER — shop
    ========================================================= */
+function mkBuy(o) {
+  const b = document.createElement("button");
+  b.className = "buy" + (o.owned ? " owned" : "");
+  if (o.disabled) b.disabled = true;
+  let lines = "";
+  (o.lines || []).forEach(l => {
+    if (!l) return;
+    const isObj = (typeof l === "object");
+    const text = isObj ? l.t : l;
+    lines += '<span class="b-line' + (isObj && l.boost ? ' boost' : '') + '">' + text + '</span>';
+  });
+  const right = (o.cost == null)
+    ? '<span class="b-cost"><span class="b-owned">' + (o.tag || "Owned") + '</span></span>'
+    : '<span class="b-cost coin">' + fmt(o.cost) + '</span>';
+  b.innerHTML =
+    '<span class="ico">' + icon(o.ic, o.c) + '</span>' +
+    '<span class="info"><span class="b-name">' + o.name +
+      (o.ownedCount ? ' <span class="b-tag">\u00d7' + o.ownedCount + '</span>' : '') +
+      (o.tag && o.cost != null ? ' <span class="b-tag">' + o.tag + '</span>' : '') +
+    '</span>' + lines + '</span>' + right;
+  return b;
+}
 function renderShop() {
-  document.querySelectorAll(".tab").forEach(t =>
-    t.classList.toggle("active", t.dataset.tab === shopTab));
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === shopTab));
   const body = document.getElementById("shop-body");
   body.innerHTML = "";
 
   if (shopTab === "weapons") {
     WEAPONS.forEach((w, i) => {
-      if (i === 0) return; // fists are the default, nothing to buy
-      const owned = state.weaponTier >= i;
-      const isNext = state.weaponTier === i - 1;
+      if (i === 0) return;
+      const owned = state.weaponTier >= i, isNext = state.weaponTier === i - 1;
       const b = mkBuy({
-        ico: w.ico, name: w.name,
-        desc: "Click damage → " + fmt(w.dmg),
-        cost: owned ? null : w.cost,
-        owned,
+        ic: w.ic, c: w.c, name: w.name,
+        lines: ["Click damage " + fmt(w.dmg)],
+        cost: owned ? null : w.cost, owned,
         disabled: !owned && (!isNext || state.gold < w.cost),
         tag: owned ? "Equipped" : (isNext ? null : "Locked"),
       });
       if (!owned && isNext) b.onclick = () => {
         if (state.gold < w.cost) return;
-        state.gold -= w.cost; state.weaponTier = i;
-        toast("Equipped " + w.name + "!"); afterBuy();
+        state.gold -= w.cost; state.weaponTier = i; toast("Equipped " + w.name + "!"); afterBuy();
       };
       body.appendChild(b);
     });
@@ -766,19 +625,15 @@ function renderShop() {
   if (shopTab === "strength") {
     const cost = strengthCost();
     const b = mkBuy({
-      ico:"💪", name:"Train Strength",
-      desc:"+2 base click damage  (Lv " + state.strengthLevel + ")",
+      ic:"prayer", c:"#c98a3a", name:"Train Strength",
+      lines: ["+2 click damage", { t:"Level " + state.strengthLevel, boost:true }],
       cost, disabled: state.gold < cost,
     });
-    b.onclick = () => { const c = strengthCost(); if (state.gold < c) return;
-      state.gold -= c; state.strengthLevel++; afterBuy(); };
+    b.onclick = () => { const c = strengthCost(); if (state.gold < c) return; state.gold -= c; state.strengthLevel++; afterBuy(); };
     body.appendChild(b);
-
     const note = document.createElement("div");
-    note.className = "b-desc";
     note.style.cssText = "padding:8px 4px;color:var(--ink-dim);font-size:12px;line-height:1.5";
-    note.innerHTML = "Each level adds flat click damage, then scales with your "
-      + "Prayer bonus. Cheap early, and it never stops helping.";
+    note.textContent = "Each level adds flat click damage, then scales with your Prayer bonus. Cheap early, and it never stops helping.";
     body.appendChild(note);
   }
 
@@ -786,51 +641,37 @@ function renderShop() {
     FAMILIARS.forEach(f => {
       const owned = state.familiars[f.key] || 0;
       const cost = familiarCost(f);
+      const mult = famMilestoneMult(owned), next = famNextMilestone(owned);
+      let boostLine;
+      if (owned === 0) boostLine = { t: "First prestige at " + FAM_MILESTONES[0], boost:true };
+      else if (mult > 1) boostLine = { t: "Prestige \u00d7" + mult + (next ? " \u00b7 next \u00d72 at " + next : " \u00b7 MAX"), boost:true };
+      else boostLine = { t: "Prestige \u00d72 at " + next, boost:true };
       const b = mkBuy({
-        ico: f.ico, name: f.name,
-        desc: "+" + fmt(f.dps) + " damage/sec each",
-        cost, ownedCount: owned,
-        disabled: state.gold < cost,
+        ic: f.ic, c: f.c, name: f.name, ownedCount: owned,
+        lines: ["+" + fmt(f.dps) + " dmg/sec each", boostLine],
+        cost, disabled: state.gold < cost,
       });
-      b.onclick = () => { const c = familiarCost(f); if (state.gold < c) return;
-        state.gold -= c; state.familiars[f.key] = (state.familiars[f.key]||0)+1; afterBuy(); };
+      b.onclick = () => { const c = familiarCost(f); if (state.gold < c) return; state.gold -= c; state.familiars[f.key] = (state.familiars[f.key] || 0) + 1; afterBuy(); };
       body.appendChild(b);
     });
+    const note = document.createElement("div");
+    note.style.cssText = "padding:8px 4px;color:var(--ink-dim);font-size:12px;line-height:1.5";
+    note.textContent = "Prestige: owning 10, 25, 50, 100, 200, 500, or 1000 of a familiar doubles that familiar's damage each time.";
+    body.appendChild(note);
   }
 
   if (shopTab === "perks") {
     PERKS.forEach(p => {
-      const lvl = state.perks[p.key];
-      const cost = perkCost(p);
+      const lvl = state.perks[p.key], cost = perkCost(p);
       const b = mkBuy({
-        ico: p.ico, name: p.name,
-        desc: p.desc + "  (Lv " + lvl + ")",
+        ic: p.ic, c: p.c, name: p.name,
+        lines: [p.desc, { t:"Level " + lvl, boost:true }],
         cost, disabled: state.gold < cost,
       });
-      b.onclick = () => { const c = perkCost(p); if (state.gold < c) return;
-        state.gold -= c; state.perks[p.key]++; afterBuy(); };
+      b.onclick = () => { const c = perkCost(p); if (state.gold < c) return; state.gold -= c; state.perks[p.key]++; afterBuy(); };
       body.appendChild(b);
     });
   }
-}
-
-function mkBuy(o) {
-  const b = document.createElement("button");
-  b.className = "buy" + (o.owned ? " owned" : "");
-  if (o.disabled) b.disabled = true;
-  let right;
-  if (o.cost == null) right = '<span class="b-owned">' + (o.tag || "Owned") + '</span>';
-  else right = '<span class="b-cost coin">' + fmt(o.cost) + '</span>';
-  b.innerHTML =
-    '<span class="ico">' + o.ico + '</span>' +
-    '<span class="info">' +
-      '<span class="b-name">' + o.name +
-        (o.ownedCount ? ' <span class="b-owned">×'+o.ownedCount+'</span>' : '') +
-        (o.tag && o.cost != null ? ' <span class="b-owned">'+o.tag+'</span>' : '') +
-      '</span>' +
-      '<span class="b-desc">' + o.desc + '</span>' +
-    '</span>' + right;
-  return b;
 }
 function afterBuy() { refreshStats(); renderShop(); save(true); }
 
@@ -847,31 +688,23 @@ function refreshStats() {
     d > 0 ? ("Your familiars deal " + fmt(d) + " damage/sec automatically.")
           : "Buy a Summoning familiar to deal damage automatically.";
 }
-
 function fmt(n) {
   n = Math.round(n);
   if (n < 1000) return "" + n;
-  const units = ["","K","M","B","T","Qa","Qi","Sx"];
-  let u = 0;
+  const units = ["","K","M","B","T","Qa","Qi","Sx","Sp","Oc"]; let u = 0;
   while (n >= 1000 && u < units.length - 1) { n /= 1000; u++; }
   return (n < 10 ? n.toFixed(2) : n < 100 ? n.toFixed(1) : Math.floor(n)) + units[u];
 }
 function toRoman(num) {
   if (num <= 0) return "0";
-  const map = [[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],
-    [50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]];
-  let r = "";
-  for (const [v,s] of map) while (num >= v) { r += s; num -= v; }
-  return r;
+  const map = [[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]];
+  let r = ""; for (const pair of map) { while (num >= pair[0]) { r += pair[1]; num -= pair[0]; } } return r;
 }
-
 let toastTimer;
 function toast(msg) {
   const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
 }
 
 /* =========================================================
@@ -879,37 +712,25 @@ function toast(msg) {
    ========================================================= */
 function init() {
   const loaded = load();
-
   document.getElementById("monster").addEventListener("click", onMonsterClick);
   document.querySelectorAll(".tab").forEach(t =>
     t.addEventListener("click", () => { shopTab = t.dataset.tab; renderShop(); }));
-
   document.getElementById("save-btn").onclick = () => save(false);
   document.getElementById("reset-btn").onclick = () => {
     if (confirm("Reset all progress? This cannot be undone.")) {
       state = freshState();
-      try { localStorage.removeItem(SAVE_KEY); } catch(e){}
-      deadLock = false;
-      renderAreas(); renderShop(); spawnMonster(); refreshStats();
+      try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+      deadLock = false; renderAreas(); renderShop(); spawnMonster(); refreshStats();
       toast("Progress reset. Welcome back to Lumbridge!");
     }
   };
-
-  // make sure current area is valid/unlocked
   if (!state.unlocked[state.currentArea]) state.currentArea = 0;
-
-  renderAreas();
-  renderShop();
-  spawnMonster();
-  refreshStats();
-
-  setInterval(dpsTick, 100);       // familiars attack 10x/sec
+  renderAreas(); renderShop(); spawnMonster(); refreshStats();
+  setInterval(dpsTick, 100);
   setInterval(() => save(true), 15000);
   window.addEventListener("beforeunload", () => save(true));
-
   if (!loaded) toast("Welcome to Gielinor! Click the chicken to begin.");
 }
-
 document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
