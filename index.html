@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Gielinor Clicker — An OSRS Idle Adventure</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>Gielinor Clicker</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Ccircle%20cx='32'%20cy='32'%20r='28'%20fill='%23ffcc22'%20stroke='%23b8901f'%20stroke-width='4'/%3E%3Ccircle%20cx='32'%20cy='32'%20r='21'%20fill='none'%20stroke='%23b8901f'%20stroke-width='2'/%3E%3Cpolygon%20points='32,15%2036,37%2028,37'%20fill='%23b8901f'/%3E%3Crect%20x='27'%20y='35'%20width='10'%20height='6'%20rx='1'%20fill='%23b8901f'/%3E%3Crect%20x='30'%20y='40'%20width='4'%20height='10'%20rx='1'%20fill='%23b8901f'/%3E%3C/svg%3E" />
 <style>
   :root {
     --bg:        #120d08;
@@ -29,7 +30,11 @@
     color: var(--ink);
     font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
     -webkit-font-smoothing: antialiased; min-height: 100vh;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   }
+  /* Kill double-tap / pinch zoom inside the game (esp. on mobile) */
+  html { touch-action: manipulation; }
+  button, .tab, .monster, .area-btn, .buy, .mini-btn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .panel {
     background: linear-gradient(180deg, var(--wood-lite), var(--wood) 40%, var(--wood-dark));
     border: 2px solid var(--bevel-lo);
@@ -143,7 +148,16 @@
     border-radius: 4px 4px 0 0; color: var(--ink-dim);
   }
   .tab.active { background: linear-gradient(180deg,#6b4f2c,#4a3620); color: var(--gold); }
-  .tab-body { padding: 8px; max-height: 540px; overflow-y:auto; }
+  .tab-body { padding: 8px; max-height: calc(100vh - 140px); overflow-y:auto; }
+
+  /* buy-amount toggle (familiars) */
+  .qty-row { display:flex; gap:5px; padding: 4px 4px 8px; }
+  .qty-btn {
+    flex:1; padding:6px 4px; cursor:pointer; text-align:center; font-size:12px; font-weight:bold;
+    background: linear-gradient(180deg,#3c2b16,#2a1d10); border:2px solid var(--bevel-lo);
+    color: var(--ink-dim); border-radius:3px; font-family:inherit;
+  }
+  .qty-btn.active { background: linear-gradient(180deg,#6b4f2c,#4a3620); color: var(--gold); box-shadow: inset 1px 1px 0 var(--gold); }
 
   .buy {
     display:flex; align-items:center; gap:10px; width:100%; text-align:left; cursor:pointer;
@@ -182,6 +196,23 @@
   }
   #toast.show{ opacity:1; transform: translateX(-50%) translateY(-6px); }
 
+  /* Always-visible gold badge — appears once you scroll away from the header */
+  #gold-hud {
+    position: fixed; top: 10px; right: 12px; z-index: 46;
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 14px; border-radius: 999px;
+    font-size: 16px; font-weight: bold;
+    opacity: 0; transform: translateY(-14px); pointer-events: none;
+    transition: opacity .2s, transform .2s;
+  }
+  #gold-hud.show { opacity: 1; transform: translateY(0); }
+  #gold-hud .coin-dot {
+    width: 16px; height: 16px; border-radius: 50%; flex:none;
+    background: radial-gradient(circle at 35% 30%, #ffe27a, var(--gold) 55%, var(--gold-dim));
+    box-shadow: 0 0 0 1px #000 inset;
+  }
+  #gold-hud .hud-val { color: var(--gold); text-shadow: 1px 1px 0 #000; }
+
   @media (max-width: 920px) {
     .layout { grid-template-columns: 1fr; }
     .area-list { display:grid; grid-template-columns: 1fr 1fr; gap:0 8px; }
@@ -200,6 +231,8 @@
     <div class="stat panel"><div class="label">Kills</div><div class="value shadow-text" id="stat-kills">0</div></div>
   </div>
 </header>
+
+<div id="gold-hud" class="panel"><span class="coin-dot"></span><span class="hud-val" id="hud-gold">0</span></div>
 
 <div class="layout">
   <div class="panel">
@@ -234,9 +267,7 @@
 </div>
 
 <footer>
-  <button class="mini-btn" id="save-btn">&#128190; Save</button>
-  <button class="mini-btn danger" id="reset-btn">&#128465; Reset progress</button>
-  <span class="mini-btn" style="cursor:default">Autosaves every 15s</span>
+  <button class="mini-btn danger" id="reset-btn">Reset progress</button>
 </footer>
 
 <div id="toast"></div>
@@ -284,6 +315,11 @@ const ICON = {
  ring:`<circle cx="32" cy="40" r="16" fill="none" stroke="{c}" stroke-width="7"/><polygon points="32,10 40,22 32,30 24,22" fill="#d23b30"/><polygon points="32,12 38,22 32,20 26,22" fill="#ff7a70"/>`,
  book:`<path d="M10 20 q12 -6 22 0 v34 q-10 -5 -22 0z" fill="{c}"/><path d="M54 20 q-12 -6 -22 0 v34 q10 -5 22 0z" fill="{c}" opacity="0.85"/><path d="M32 20 v34" stroke="#5a3a1a" stroke-width="2"/><circle cx="21" cy="34" r="5" fill="#8affc0" opacity="0.85"/><circle cx="43" cy="34" r="5" fill="#8affc0" opacity="0.6"/>`,
  lock:`<rect x="16" y="30" width="32" height="26" rx="4" fill="{c}"/><path d="M22 30 v-6 a10 10 0 0 1 20 0 v6" fill="none" stroke="{c}" stroke-width="5"/><circle cx="32" cy="42" r="4" fill="#2a1d10"/><rect x="30" y="42" width="4" height="8" fill="#2a1d10"/>`,
+ crab:`<ellipse cx="32" cy="42" rx="17" ry="10" fill="{c}"/><path d="M15 40 q-9 0 -11 -8 q5 3 7 -1 M15 40 q-6 -3 -9 -9" stroke="{c}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M49 40 q9 0 11 -8 q-5 3 -7 -1 M49 40 q6 -3 9 -9" stroke="{c}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M20 48 l-7 9 M28 50 l-4 9 M36 50 l4 9 M44 48 l7 9" stroke="{c}" stroke-width="3" stroke-linecap="round"/><circle cx="27" cy="34" r="2.4" fill="#20140a"/><circle cx="37" cy="34" r="2.4" fill="#20140a"/><path d="M27 32 v-5 M37 32 v-5" stroke="{c}" stroke-width="2"/>`,
+ hydra:`<ellipse cx="32" cy="47" rx="16" ry="10" fill="{c}"/><path d="M22 44 q-7 -13 -13 -15 q2 8 7 12" fill="none" stroke="{c}" stroke-width="6" stroke-linecap="round"/><path d="M32 42 q0 -15 0 -22" fill="none" stroke="{c}" stroke-width="6" stroke-linecap="round"/><path d="M42 44 q7 -13 13 -15 q-2 8 -7 12" fill="none" stroke="{c}" stroke-width="6" stroke-linecap="round"/><circle cx="9" cy="27" r="5.5" fill="{c}"/><circle cx="32" cy="17" r="6.5" fill="{c}"/><circle cx="55" cy="27" r="5.5" fill="{c}"/><circle cx="9" cy="26" r="1.5" fill="#ffe36b"/><circle cx="32" cy="16" r="1.7" fill="#ff5a3d"/><circle cx="55" cy="26" r="1.5" fill="#43c4d0"/><path d="M20 52 l-4 7 M32 53 v7 M44 52 l4 7" stroke="{c}" stroke-width="3" stroke-linecap="round"/>`,
+ knight:`<rect x="24" y="30" width="18" height="22" rx="4" fill="{c}"/><path d="M24 20 q9 -9 18 0 l0 9 q-9 5 -18 0z" fill="{c}"/><rect x="30" y="24" width="6" height="7" rx="1" fill="#20140a"/><path d="M33 9 q7 2 4 11" stroke="#d23b30" stroke-width="3" fill="none"/><rect x="10" y="30" width="13" height="19" rx="3" fill="{c}"/><path d="M16.5 33 v13 M11 39 h11" stroke="#0004" stroke-width="1.6"/><rect x="47" y="12" width="4" height="36" rx="2" fill="#d8d8e0"/><rect x="44" y="44" width="10" height="4" fill="#6a4a24"/>`,
+ kraken:`<ellipse cx="32" cy="27" rx="16" ry="15" fill="{c}"/><circle cx="26" cy="26" r="3" fill="#20140a"/><circle cx="38" cy="26" r="3" fill="#20140a"/><circle cx="25.2" cy="25" r="1" fill="#fff"/><circle cx="37.2" cy="25" r="1" fill="#fff"/><path d="M20 40 q-6 8 -14 8 q6 -4 6 -10 M26 42 q-2 10 -8 14 q6 -6 4 -14 M32 43 q0 12 0 16 q4 -6 2 -16 M38 42 q2 10 8 14 q-6 -6 -4 -14 M44 40 q6 8 14 8 q-6 -4 -6 -10" fill="none" stroke="{c}" stroke-width="4" stroke-linecap="round"/>`,
+ moon:`<circle cx="32" cy="32" r="21" fill="{c}"/><circle cx="24" cy="25" r="4.5" fill="#0003"/><circle cx="42" cy="31" r="6" fill="#0003"/><circle cx="29" cy="43" r="5" fill="#0003"/><circle cx="40" cy="19" r="2.5" fill="#0002"/><path d="M32 11 a21 21 0 0 1 0 42 a15 15 0 0 0 0 -42z" fill="#fff" opacity="0.10"/><circle cx="32" cy="32" r="21" fill="none" stroke="#fff" stroke-width="1" opacity="0.25"/>`,
 };
 function icon(key, color) {
   return '<svg viewBox="0 0 64 64" class="ic-svg" xmlns="http://www.w3.org/2000/svg">'
@@ -330,38 +366,52 @@ const PERKS = [
 // Areas = repeatable levels. goldMul climbs faster than hpMul, so deeper areas
 // always pay better gold-per-time than farming a low area's high tiers.
 const AREAS = [
-  { name:"Lumbridge", hpMul:1, goldMul:1,
+  { name:"Misthalin", hpMul:1, goldMul:1,
     monsters:[{n:"Chicken",ic:"chicken",c:"#f2f2ec"},{n:"Cow",ic:"cow",c:"#f0efe8"},{n:"Goblin",ic:"goblin",c:"#5a9e3f"},{n:"Giant Rat",ic:"rat",c:"#9a8763"}],
-    boss:{n:"Evil Chicken",ic:"chicken",c:"#b23a2a"} },
-  { name:"Varrock Sewers", hpMul:6, goldMul:9,
-    monsters:[{n:"Zombie",ic:"zombie",c:"#6d9153"},{n:"Giant Spider",ic:"spider",c:"#3a3340"},{n:"Skeleton",ic:"skeleton",c:"#e8e2d2"},{n:"Giant Rat",ic:"rat",c:"#7a6a4a"}],
-    boss:{n:"Moss Giant",ic:"giant",c:"#4a6a3a"} },
-  { name:"Al Kharid Desert", hpMul:36, goldMul:81,
-    monsters:[{n:"Scorpion",ic:"scorpion",c:"#8a5f2a"},{n:"Giant Bat",ic:"bat",c:"#5a4a3a"},{n:"Desert Warrior",ic:"warrior",c:"#c9a15a"},{n:"Vulture",ic:"bird",c:"#7a5a3a"}],
+    boss:{n:"Scurrius",ic:"rat",c:"#6a5142"} },
+  { name:"Asgarnia", hpMul:6, goldMul:9,
+    monsters:[{n:"Dwarf",ic:"warrior",c:"#b07a3a"},{n:"Ice Warrior",ic:"warrior",c:"#7aa8d0"},{n:"White Knight",ic:"knight",c:"#e4e6ec"},{n:"Hill Giant",ic:"giant",c:"#9a8a6a"}],
+    boss:{n:"Giant Mole",ic:"rat",c:"#5a4432"} },
+  { name:"Kharidian Desert", hpMul:36, goldMul:81,
+    monsters:[{n:"Scorpion",ic:"scorpion",c:"#8a5f2a"},{n:"Desert Wolf",ic:"dog",c:"#c9a15a"},{n:"Kalphite Worker",ic:"kalphite",c:"#c88a3a"},{n:"Dust Devil",ic:"elemental",c:"#b7a077"}],
     boss:{n:"Kalphite Queen",ic:"kalphite",c:"#d8a83a"} },
-  { name:"Taverley Dungeon", hpMul:216, goldMul:730,
-    monsters:[{n:"Hill Giant",ic:"giant",c:"#9a8a6a"},{n:"Hellhound",ic:"dog",c:"#3a3340"},{n:"Blue Dragon",ic:"dragon",c:"#3a6fd0"},{n:"Chaos Druid",ic:"druid",c:"#6a4a8a"}],
-    boss:{n:"Chaos Elemental",ic:"elemental",c:"#9a5ad0"} },
-  { name:"Karamja Volcano", hpMul:1300, goldMul:6600,
-    monsters:[{n:"Lesser Demon",ic:"demon",c:"#c33a2a"},{n:"Fire Giant",ic:"giant",c:"#c86a2a"},{n:"Greater Demon",ic:"demon",c:"#8a2a1a"},{n:"Lava Beast",ic:"blob",c:"#e07020"}],
+  { name:"Karamja", hpMul:216, goldMul:730,
+    monsters:[{n:"Jungle Spider",ic:"spider",c:"#3a5a2a"},{n:"Jogre",ic:"giant",c:"#6a8a3a"},{n:"Lesser Demon",ic:"demon",c:"#c33a2a"},{n:"TzHaar-Ket",ic:"blob",c:"#e07020"}],
     boss:{n:"TzTok-Jad",ic:"blob",c:"#d24a1a"} },
-  { name:"God Wars Dungeon", hpMul:7800, goldMul:59000,
-    monsters:[{n:"Spiritual Warrior",ic:"warrior",c:"#8a9ac8"},{n:"Aviansie",ic:"bird",c:"#d8d8e0"},{n:"Ork",ic:"goblin",c:"#7a6a4a"},{n:"Goblin Guard",ic:"goblin",c:"#4a8a3a"}],
-    boss:{n:"General Graardor",ic:"general",c:"#8a7a55"} },
-  { name:"Morytania Swamp", hpMul:47000, goldMul:535000,
-    monsters:[{n:"Vampyre",ic:"vampire",c:"#c8c0c8"},{n:"Snakeling",ic:"snake",c:"#3aa06a"},{n:"Ghoul",ic:"zombie",c:"#8a8a6a"},{n:"Werewolf",ic:"dog",c:"#5a4a3a"}],
-    boss:{n:"Zulrah",ic:"snake",c:"#2aa08a"} },
-  { name:"Ungael Ruins", hpMul:280000, goldMul:4800000,
-    monsters:[{n:"Undead Dragon",ic:"dragon",c:"#7a8a6a"},{n:"Skeletal Wyvern",ic:"dragon",c:"#cfc7b0"},{n:"Ice Troll",ic:"giant",c:"#7aa8c8"},{n:"Wight",ic:"skeleton",c:"#b8b0a0"}],
-    boss:{n:"Vorkath",ic:"dragon",c:"#4a5a6a"} },
-  { name:"KBD Lair", hpMul:1700000, goldMul:43000000,
-    monsters:[{n:"Baby Dragon",ic:"dragon",c:"#3a8a5a"},{n:"Black Demon",ic:"demon",c:"#3a3348"},{n:"Poison Spider",ic:"spider",c:"#4a7a2a"},{n:"Bone Guardian",ic:"skeleton",c:"#e8e2d2"}],
+  { name:"Kandarin", hpMul:1300, goldMul:6600,
+    monsters:[{n:"Ogre",ic:"giant",c:"#8a7a4a"},{n:"Dagannoth",ic:"kalphite",c:"#4a8a9a"},{n:"Fire Giant",ic:"giant",c:"#c86a2a"},{n:"Otherworldly Being",ic:"elemental",c:"#8a5ad0"}],
+    boss:{n:"Kraken",ic:"kraken",c:"#5a4a8a"} },
+  { name:"Fremennik Province", hpMul:7800, goldMul:59000,
+    monsters:[{n:"Rock Crab",ic:"crab",c:"#7a6a52"},{n:"Fremennik Warrior",ic:"warrior",c:"#b8a06a"},{n:"Ice Troll",ic:"giant",c:"#8ac0d8"},{n:"Dagannoth",ic:"kalphite",c:"#5a7a8a"}],
+    boss:{n:"Dagannoth Rex",ic:"kalphite",c:"#b03a2a"} },
+  { name:"Great Kourend", hpMul:47000, goldMul:535000,
+    monsters:[{n:"Sand Crab",ic:"crab",c:"#d8c88a"},{n:"Lizardman",ic:"goblin",c:"#5a7a3a"},{n:"Lizardman Shaman",ic:"goblin",c:"#3a5a2a"},{n:"Shayzien Soldier",ic:"knight",c:"#c0b078"}],
+    boss:{n:"Skotizo",ic:"demon",c:"#2a2a34"} },
+  { name:"Kebos Lowlands", hpMul:280000, goldMul:4800000,
+    monsters:[{n:"Wyrm",ic:"snake",c:"#c86a2a"},{n:"Drake",ic:"dragon",c:"#c0392a"},{n:"Juvenile Hydra",ic:"hydra",c:"#5a8a5a"},{n:"Lizardman Shaman",ic:"goblin",c:"#3a5a2a"}],
+    boss:{n:"Alchemical Hydra",ic:"hydra",c:"#3a7a4a"} },
+  { name:"Morytania", hpMul:1700000, goldMul:43000000,
+    monsters:[{n:"Ghoul",ic:"zombie",c:"#8a8a6a"},{n:"Werewolf",ic:"dog",c:"#5a4a3a"},{n:"Vampyre",ic:"vampire",c:"#c8c0c8"},{n:"Bloodveld",ic:"blob",c:"#a82a2a"}],
+    boss:{n:"Dharok the Wretched",ic:"general",c:"#3a4a2a"} },
+  { name:"Tirannwn", hpMul:10000000, goldMul:390000000,
+    monsters:[{n:"Elf Warrior",ic:"warrior",c:"#c8d0e0"},{n:"Dark Beast",ic:"dog",c:"#2a2434"},{n:"Iorwerth Warrior",ic:"knight",c:"#5a5a6a"},{n:"Waterfiend",ic:"blob",c:"#3a6fd0"}],
+    boss:{n:"Zalcano",ic:"elemental",c:"#3fa06a"} },
+  { name:"Varlamore", hpMul:60000000, goldMul:3500000000,
+    monsters:[{n:"Sulphur Nagua",ic:"snake",c:"#c8c83a"},{n:"Sunlight Antelope",ic:"cow",c:"#d8b06a"},{n:"Blue Moon",ic:"moon",c:"#4a7ad0"},{n:"Eclipse Moon",ic:"moon",c:"#6a3a5a"}],
+    boss:{n:"Sol Heredit",ic:"general",c:"#e0b83a"} },
+  { name:"Wilderness", hpMul:360000000, goldMul:31000000000,
+    monsters:[{n:"Green Dragon",ic:"dragon",c:"#3a8a5a"},{n:"Revenant",ic:"elemental",c:"#8affc0"},{n:"Hellhound",ic:"dog",c:"#3a2a2a"},{n:"Ankou",ic:"skeleton",c:"#2a2a34"}],
     boss:{n:"King Black Dragon",ic:"dragon",c:"#37344a"} },
 ];
 
 const WAVES_PER_AREA = 10;
 const TIER_SCALE = 1.5; // applied equally to HP and gold -> efficiency-neutral tiers
-const FAM_MILESTONES = [10, 25, 50, 100, 200, 500, 1000];
+// Prestige milestones: 10, then every 25 (25, 50, 75, 100, ...). Each one doubles.
+function buildMilestones() { const a = [10]; for (let v = 25; v <= 2000; v += 25) a.push(v); return a; }
+const FAM_MILESTONES = buildMilestones();
+const STR_MILESTONES = buildMilestones();
+function milestoneMult(count, list) { let m = 1; for (const t of list) if (count >= t) m *= 2; return m; }
+function nextMilestone(count, list) { for (const t of list) if (count < t) return t; return null; }
 
 /* =========================================================
    STATE
@@ -377,6 +427,7 @@ function freshState() {
 let state = freshState();
 let mon = null;
 let shopTab = "weapons";
+let famBuyQty = 1;   // 1 / 5 / 25  — how many familiars to buy per click
 
 /* =========================================================
    PERSISTENCE
@@ -407,21 +458,25 @@ function strMult()  { return 1 + state.perks.strMult * PERKS[0].effect; }
 
 function clickDamage() {
   const wep = WEAPONS[state.weaponTier].dmg;
-  const flat = state.strengthLevel * 2;
+  const flat = state.strengthLevel * 2 * milestoneMult(state.strengthLevel, STR_MILESTONES);
   return Math.max(1, Math.floor((wep + flat) * strMult()));
 }
-function famMilestoneMult(count) { let m = 1; for (const t of FAM_MILESTONES) if (count >= t) m *= 2; return m; }
-function famNextMilestone(count) { for (const t of FAM_MILESTONES) if (count < t) return t; return null; }
 function dps() {
   let total = 0;
   for (const f of FAMILIARS) {
     const c = state.familiars[f.key] || 0;
-    total += c * f.dps * famMilestoneMult(c);
+    total += c * f.dps * milestoneMult(c, FAM_MILESTONES);
   }
   return Math.floor(total * famMult());
 }
 function strengthCost() { return Math.floor(15 * Math.pow(1.14, state.strengthLevel)); }
 function familiarCost(f) { return Math.floor(f.base * Math.pow(1.15, state.familiars[f.key] || 0)); }
+// Total cost to buy `n` more of a familiar (prices escalate per unit).
+function familiarCostN(f, n) {
+  const owned = state.familiars[f.key] || 0; let total = 0;
+  for (let k = 0; k < n; k++) total += Math.floor(f.base * Math.pow(1.15, owned + k));
+  return total;
+}
 function perkCost(p) { return Math.floor(p.base * Math.pow(p.growth, state.perks[p.key])); }
 
 function monsterHpFor(area, wave, isBoss) {
@@ -471,9 +526,12 @@ function killMonster() {
     el.classList.remove("dying");
     if (wasBoss) {
       state.areaTier[area] = tierOf(area) + 1;
-      if (area + 1 < AREAS.length && !state.unlocked[area + 1]) {
+      const hasNext = area + 1 < AREAS.length;
+      const firstClear = hasNext && !state.unlocked[area + 1];
+      if (firstClear) {
         state.unlocked[area + 1] = true;
-        toast("New area unlocked: " + AREAS[area + 1].name + "!");
+        state.currentArea = area + 1;   // auto-progress to the next region on first clear
+        toast(AREAS[area].boss.n + " defeated! Advancing to " + AREAS[area + 1].name + "!");
       } else {
         toast(AREAS[area].boss.n + " defeated! Tier " + toRoman(tierOf(area)) + " cleared.");
       }
@@ -596,6 +654,8 @@ function mkBuy(o) {
       (o.ownedCount ? ' <span class="b-tag">\u00d7' + o.ownedCount + '</span>' : '') +
       (o.tag && o.cost != null ? ' <span class="b-tag">' + o.tag + '</span>' : '') +
     '</span>' + lines + '</span>' + right;
+  // Mark buttons whose only gate is gold, so affordability can refresh live.
+  if (o.buyable && o.cost != null) b.dataset.cost = o.cost;
   return b;
 }
 function renderShop() {
@@ -612,6 +672,7 @@ function renderShop() {
         lines: ["Click damage " + fmt(w.dmg)],
         cost: owned ? null : w.cost, owned,
         disabled: !owned && (!isNext || state.gold < w.cost),
+        buyable: !owned && isNext,
         tag: owned ? "Equipped" : (isNext ? null : "Locked"),
       });
       if (!owned && isNext) b.onclick = () => {
@@ -624,39 +685,59 @@ function renderShop() {
 
   if (shopTab === "strength") {
     const cost = strengthCost();
+    const lvl = state.strengthLevel;
+    const mult = milestoneMult(lvl, STR_MILESTONES), next = nextMilestone(lvl, STR_MILESTONES);
+    let boostLine;
+    if (mult > 1) boostLine = { t: "Prestige \u00d7" + mult + (next ? " \u00b7 next \u00d72 at Lv " + next : " \u00b7 MAX"), boost:true };
+    else boostLine = { t: "First prestige at Lv " + STR_MILESTONES[0], boost:true };
     const b = mkBuy({
       ic:"prayer", c:"#c98a3a", name:"Train Strength",
-      lines: ["+2 click damage", { t:"Level " + state.strengthLevel, boost:true }],
-      cost, disabled: state.gold < cost,
+      lines: ["+2 base click damage / level", { t:"Level " + lvl, boost:true }, boostLine],
+      cost, disabled: state.gold < cost, buyable:true,
     });
     b.onclick = () => { const c = strengthCost(); if (state.gold < c) return; state.gold -= c; state.strengthLevel++; afterBuy(); };
     body.appendChild(b);
     const note = document.createElement("div");
     note.style.cssText = "padding:8px 4px;color:var(--ink-dim);font-size:12px;line-height:1.5";
-    note.textContent = "Each level adds flat click damage, then scales with your Prayer bonus. Cheap early, and it never stops helping.";
+    note.textContent = "Each level adds flat click damage and scales with your Prayer bonus. Reaching Lv 10, 25, 50, 75, 100\u2026 (then every +25) doubles your Strength damage \u2014 keeps clicking relevant into the late game.";
     body.appendChild(note);
   }
 
   if (shopTab === "familiars") {
+    // buy-amount toggle: x1 / x5 / x25
+    const qtyRow = document.createElement("div");
+    qtyRow.className = "qty-row";
+    [1, 5, 25].forEach(q => {
+      const qb = document.createElement("button");
+      qb.className = "qty-btn" + (famBuyQty === q ? " active" : "");
+      qb.textContent = "\u00d7" + q;
+      qb.onclick = () => { famBuyQty = q; renderShop(); };
+      qtyRow.appendChild(qb);
+    });
+    body.appendChild(qtyRow);
+
     FAMILIARS.forEach(f => {
       const owned = state.familiars[f.key] || 0;
-      const cost = familiarCost(f);
-      const mult = famMilestoneMult(owned), next = famNextMilestone(owned);
+      const cost = familiarCostN(f, famBuyQty);
+      const mult = milestoneMult(owned, FAM_MILESTONES), next = nextMilestone(owned, FAM_MILESTONES);
       let boostLine;
-      if (owned === 0) boostLine = { t: "First prestige at " + FAM_MILESTONES[0], boost:true };
-      else if (mult > 1) boostLine = { t: "Prestige \u00d7" + mult + (next ? " \u00b7 next \u00d72 at " + next : " \u00b7 MAX"), boost:true };
+      if (mult > 1) boostLine = { t: "Prestige \u00d7" + mult + (next ? " \u00b7 next \u00d72 at " + next : " \u00b7 MAX"), boost:true };
       else boostLine = { t: "Prestige \u00d72 at " + next, boost:true };
       const b = mkBuy({
         ic: f.ic, c: f.c, name: f.name, ownedCount: owned,
         lines: ["+" + fmt(f.dps) + " dmg/sec each", boostLine],
-        cost, disabled: state.gold < cost,
+        cost, disabled: state.gold < cost, buyable:true,
+        tag: famBuyQty > 1 ? "Buy \u00d7" + famBuyQty : null,
       });
-      b.onclick = () => { const c = familiarCost(f); if (state.gold < c) return; state.gold -= c; state.familiars[f.key] = (state.familiars[f.key] || 0) + 1; afterBuy(); };
+      b.onclick = () => {
+        const c = familiarCostN(f, famBuyQty); if (state.gold < c) return;
+        state.gold -= c; state.familiars[f.key] = (state.familiars[f.key] || 0) + famBuyQty; afterBuy();
+      };
       body.appendChild(b);
     });
     const note = document.createElement("div");
     note.style.cssText = "padding:8px 4px;color:var(--ink-dim);font-size:12px;line-height:1.5";
-    note.textContent = "Prestige: owning 10, 25, 50, 100, 200, 500, or 1000 of a familiar doubles that familiar's damage each time.";
+    note.textContent = "Prestige: reaching 10, 25, 50, 75, 100\u2026 (then every +25) of a familiar doubles that familiar's damage each time. Use \u00d75 / \u00d725 above to buy in bulk.";
     body.appendChild(note);
   }
 
@@ -666,7 +747,7 @@ function renderShop() {
       const b = mkBuy({
         ic: p.ic, c: p.c, name: p.name,
         lines: [p.desc, { t:"Level " + lvl, boost:true }],
-        cost, disabled: state.gold < cost,
+        cost, disabled: state.gold < cost, buyable:true,
       });
       b.onclick = () => { const c = perkCost(p); if (state.gold < c) return; state.gold -= c; state.perks[p.key]++; afterBuy(); };
       body.appendChild(b);
@@ -679,7 +760,9 @@ function afterBuy() { refreshStats(); renderShop(); save(true); }
    STATS + HELPERS
    ========================================================= */
 function refreshStats() {
-  document.getElementById("stat-gold").textContent  = fmt(Math.floor(state.gold));
+  const goldTxt = fmt(Math.floor(state.gold));
+  document.getElementById("stat-gold").textContent  = goldTxt;
+  const hud = document.getElementById("hud-gold"); if (hud) hud.textContent = goldTxt;
   document.getElementById("stat-click").textContent = fmt(clickDamage());
   document.getElementById("stat-dps").textContent   = fmt(dps());
   document.getElementById("stat-kills").textContent = fmt(state.totalKills);
@@ -687,6 +770,15 @@ function refreshStats() {
   document.getElementById("dps-note").textContent =
     d > 0 ? ("Your familiars deal " + fmt(d) + " damage/sec automatically.")
           : "Buy a Summoning familiar to deal damage automatically.";
+  refreshAffordability();
+}
+// Enable/disable purchase buttons as gold changes, without rebuilding the shop
+// (so scroll position and the active tab are preserved).
+function refreshAffordability() {
+  const g = state.gold;
+  document.querySelectorAll("#shop-body .buy[data-cost]").forEach(b => {
+    b.disabled = g < (+b.dataset.cost);
+  });
 }
 function fmt(n) {
   n = Math.round(n);
@@ -715,20 +807,29 @@ function init() {
   document.getElementById("monster").addEventListener("click", onMonsterClick);
   document.querySelectorAll(".tab").forEach(t =>
     t.addEventListener("click", () => { shopTab = t.dataset.tab; renderShop(); }));
-  document.getElementById("save-btn").onclick = () => save(false);
   document.getElementById("reset-btn").onclick = () => {
     if (confirm("Reset all progress? This cannot be undone.")) {
       state = freshState();
       try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+      famBuyQty = 1;
       deadLock = false; renderAreas(); renderShop(); spawnMonster(); refreshStats();
-      toast("Progress reset. Welcome back to Lumbridge!");
+      toast("Progress reset. Welcome back to Misthalin!");
     }
   };
   if (!state.unlocked[state.currentArea]) state.currentArea = 0;
   renderAreas(); renderShop(); spawnMonster(); refreshStats();
   setInterval(dpsTick, 100);
+  // keep buy buttons / gold live even while idling on one tab
+  setInterval(refreshStats, 300);
   setInterval(() => save(true), 15000);
   window.addEventListener("beforeunload", () => save(true));
+
+  // floating gold badge — visible once the header scrolls out of view
+  const hud = document.getElementById("gold-hud");
+  const onScroll = () => hud.classList.toggle("show", window.scrollY > 120);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
   if (!loaded) toast("Welcome to Gielinor! Click the chicken to begin.");
 }
 document.addEventListener("DOMContentLoaded", init);
