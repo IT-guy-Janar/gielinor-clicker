@@ -121,6 +121,7 @@
   }
   .hitsplat.crit { background:#d38900; font-size:18px; min-width:40px; height:40px; }
   .hitsplat.zero { background:#0d5b9c; }
+  .hitsplat.insta { background:#7a0f1c; color:#fff; font-size:15px; min-width:46px; height:38px; box-shadow:0 0 10px #ff3b3b88; }
   @keyframes splat {
     0%{ transform: translate(-50%,-50%) scale(.4); opacity: 0; }
     18%{ transform: translate(-50%,-60%) scale(1.15); opacity: 1; }
@@ -187,6 +188,8 @@
   }
   .mini-btn:hover{ filter: brightness(1.15); }
   .mini-btn.danger{ color:#ff8a6a; }
+  .reset-top{ align-self:center; font-size:11px; padding:5px 12px; opacity:.75; }
+  .reset-top:hover{ opacity:1; }
 
   #toast {
     position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
@@ -229,6 +232,7 @@
     <div class="stat panel"><div class="label">Per Click</div><div class="value shadow-text" id="stat-click">1</div></div>
     <div class="stat panel"><div class="label">Damage / sec</div><div class="value shadow-text" id="stat-dps">0</div></div>
     <div class="stat panel"><div class="label">Kills</div><div class="value shadow-text" id="stat-kills">0</div></div>
+    <button class="mini-btn danger reset-top" id="reset-btn">&#8635; Reset</button>
   </div>
 </header>
 
@@ -265,10 +269,6 @@
     <div class="tab-body" id="shop-body"></div>
   </div>
 </div>
-
-<footer>
-  <button class="mini-btn danger" id="reset-btn">Reset progress</button>
-</footer>
 
 <div id="toast"></div>
 
@@ -311,7 +311,10 @@ const ICON = {
  whip:`<rect x="12" y="44" width="10" height="16" rx="3" fill="#2a2a2a" transform="rotate(30 17 52)"/><path d="M20 48 q18 -6 20 -24 q2 -14 -10 -16 q-8 -1 -8 8 q0 7 8 6 q4 0 3 -4" fill="none" stroke="{c}" stroke-width="4" stroke-linecap="round"/><circle cx="33" cy="8" r="3" fill="#e8d070"/>`,
  claws:`<path d="M18 54 q-2 -30 6 -40 q2 30 -2 42z" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M30 56 q-2 -32 4 -44 q3 32 -1 46z" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M42 54 q-1 -30 6 -40 q2 30 -3 42z" fill="{c}" stroke="#0004" stroke-width="1"/><rect x="16" y="52" width="34" height="8" rx="3" fill="#5a3a1a"/>`,
  godsword:`<polygon points="32,6 38,44 26,44" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M32 8 v34" stroke="#fff" stroke-width="1.2" opacity="0.6"/><rect x="16" y="44" width="32" height="7" rx="3" fill="#c8a02a"/><rect x="28" y="50" width="8" height="12" rx="2" fill="#8a6a1a"/><circle cx="32" cy="62" r="3.4" fill="#c8a02a"/>`,
+ scythe:`<rect x="30" y="12" width="4" height="46" rx="2" fill="#4a3018"/><path d="M32 14 q22 1 25 24 q-15 -13 -25 -11z" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M34 16 q17 3 21 20" stroke="#fff" stroke-width="1.2" fill="none" opacity="0.55"/><rect x="26" y="40" width="12" height="5" rx="2" fill="#6a4a24"/><rect x="27" y="52" width="10" height="8" rx="2" fill="#3a2410"/>`,
  prayer:`<circle cx="32" cy="16" r="9" fill="none" stroke="{c}" stroke-width="3"/><path d="M24 54 q0 -22 8 -26 q8 4 8 26z" fill="#e8ddc0"/><path d="M32 30 v22" stroke="#b8a878" stroke-width="1.5"/><path d="M26 34 l-4 18 M38 34 l4 18" stroke="#e8ddc0" stroke-width="4" stroke-linecap="round"/>`,
+ strength:`<rect x="26" y="28" width="12" height="8" rx="2" fill="{c}"/><rect x="15" y="21" width="8" height="22" rx="2" fill="{c}"/><rect x="8" y="26" width="6" height="12" rx="2" fill="{c}"/><rect x="41" y="21" width="8" height="22" rx="2" fill="{c}"/><rect x="50" y="26" width="6" height="12" rx="2" fill="{c}"/>`,
+ potion:`<rect x="24" y="6" width="16" height="6" rx="2" fill="#6a4a24"/><path d="M27 11 h10 v9 l7 20 a9 9 0 0 1 -8 13 h-8 a9 9 0 0 1 -8 -13 l7 -20z" fill="{c}" stroke="#0004" stroke-width="1"/><path d="M20 38 q12 6 24 0 l2 6 a9 9 0 0 1 -8 9 h-12 a9 9 0 0 1 -8 -9z" fill="#0004"/><circle cx="28" cy="30" r="2.4" fill="#fff" opacity="0.55"/>`,
  ring:`<circle cx="32" cy="40" r="16" fill="none" stroke="{c}" stroke-width="7"/><polygon points="32,10 40,22 32,30 24,22" fill="#d23b30"/><polygon points="32,12 38,22 32,20 26,22" fill="#ff7a70"/>`,
  book:`<path d="M10 20 q12 -6 22 0 v34 q-10 -5 -22 0z" fill="{c}"/><path d="M54 20 q-12 -6 -22 0 v34 q10 -5 22 0z" fill="{c}" opacity="0.85"/><path d="M32 20 v34" stroke="#5a3a1a" stroke-width="2"/><circle cx="21" cy="34" r="5" fill="#8affc0" opacity="0.85"/><circle cx="43" cy="34" r="5" fill="#8affc0" opacity="0.6"/>`,
  lock:`<rect x="16" y="30" width="32" height="26" rx="4" fill="{c}"/><path d="M22 30 v-6 a10 10 0 0 1 20 0 v6" fill="none" stroke="{c}" stroke-width="5"/><circle cx="32" cy="42" r="4" fill="#2a1d10"/><rect x="30" y="42" width="4" height="8" fill="#2a1d10"/>`,
@@ -341,7 +344,9 @@ const WEAPONS = [
   { name:"Dragon Scimitar",  ic:"scimitar", c:"#cc4030",  dmg:1500,  cost:480000 },
   { name:"Abyssal Whip",     ic:"whip",     c:"#7a1f1f",  dmg:4000,  cost:1800000 },
   { name:"Dragon Claws",     ic:"claws",    c:"#cc4030",  dmg:11000, cost:7000000 },
-  { name:"Armadyl Godsword", ic:"godsword", c:"#e8d070",  dmg:32000, cost:28000000 },
+  { name:"Armadyl Godsword", ic:"godsword", c:"#e8d070",  dmg:32000,  cost:28000000 },
+  { name:"Voidwaker",        ic:"godsword", c:"#9a4ad0",  dmg:85000,  cost:120000000 },
+  { name:"Scythe of Vitur",  ic:"scythe",   c:"#b81f2a",  dmg:240000, cost:500000000 },
 ];
 
 const FAMILIARS = [
@@ -355,12 +360,14 @@ const FAMILIARS = [
 ];
 
 const PERKS = [
-  { key:"strMult", name:"Prayer: Ultimate Strength", ic:"prayer", c:"#e8d070",
-    desc:"+8% click damage per level", base:200, growth:1.6, effect:0.08 },
-  { key:"wealth",  name:"Ring of Wealth", ic:"ring", c:"#e8d070",
-    desc:"+12% gold from all sources", base:350, growth:1.7, effect:0.12 },
-  { key:"famMult", name:"Summoning Mastery", ic:"book", c:"#b98a45",
-    desc:"+10% familiar damage per level", base:500, growth:1.7, effect:0.10 },
+  { key:"wealth",   name:"Ring of Wealth", ic:"ring", c:"#e8d070",
+    desc:"+12% gold from all sources", base:350, growth:1.7 },
+  { key:"famMult",  name:"Summoning Mastery", ic:"book", c:"#b98a45",
+    desc:"+10% familiar damage per level", base:500, growth:1.7 },
+  { key:"instakill", name:"Instant Kill", ic:"scythe", c:"#b81f2a",
+    desc:"Chance to instantly slay a monster (not bosses) \u00b7 10s cooldown", base:8000, growth:1.8 },
+  { key:"crit",      name:"Critical Strike", ic:"claws", c:"#d38900",
+    desc:"Chance for a click to deal 10\u00d7 damage", base:6000, growth:1.75 },
 ];
 
 // Areas = repeatable levels. goldMul climbs faster than hpMul, so deeper areas
@@ -419,8 +426,9 @@ function nextMilestone(count, list) { for (const t of list) if (count < t) retur
 const SAVE_KEY = "gielinorClickerSave_v2";
 function freshState() {
   return {
-    gold: 0, totalKills: 0, weaponTier: 0, strengthLevel: 0,
-    familiars: {}, perks: { strMult:0, wealth:0, famMult:0 },
+    gold: 0, totalKills: 0, weaponTier: 0,
+    strengthLevel: 0, pietyLevel: 0, overloadLevel: 0,
+    familiars: {}, perks: { wealth:0, famMult:0, instakill:0, crit:0 },
     currentArea: 0, areaTier: {}, unlocked: { 0: true }, wave: 1,
   };
 }
@@ -441,7 +449,12 @@ function load() {
     const raw = localStorage.getItem(SAVE_KEY); if (!raw) return false;
     const s = JSON.parse(raw);
     state = Object.assign(freshState(), s);
-    state.perks = Object.assign({ strMult:0, wealth:0, famMult:0 }, s.perks || {});
+    state.perks = Object.assign({ wealth:0, famMult:0, instakill:0, crit:0 }, s.perks || {});
+    // Piety moved from Perks to the Strength tab — carry old levels (and the even older
+    // "Ultimate Strength") into the new Piety upgrade so nothing is lost.
+    if (s.perks && s.perks.piety)   state.pietyLevel = (state.pietyLevel || 0) + s.perks.piety;
+    if (s.perks && s.perks.strMult) state.pietyLevel = (state.pietyLevel || 0) + s.perks.strMult;
+    delete state.perks.piety; delete state.perks.strMult;
     state.familiars = s.familiars || {}; state.areaTier = s.areaTier || {};
     state.unlocked = s.unlocked || { 0:true };
     return true;
@@ -452,14 +465,28 @@ function load() {
    DERIVED VALUES
    ========================================================= */
 function tierOf(i)  { return state.areaTier[i] || 0; }
-function goldMult() { return 1 + state.perks.wealth  * PERKS[1].effect; }
-function famMult()  { return 1 + state.perks.famMult * PERKS[2].effect; }
-function strMult()  { return 1 + state.perks.strMult * PERKS[0].effect; }
+function goldMult() { return 1 + state.perks.wealth  * 0.12; }
+function famMult()  { return 1 + state.perks.famMult * 0.10; }
+
+// Strength-tab click multipliers (each +X% per level). Train Strength also builds Prestige.
+const STR_PCT = 0.08, PIETY_PCT = 0.10, OVER_PCT = 0.12;
+// Strength-tab boosts ADD together (they don't compound), then Prestige multiplies the total.
+function clickMult()   { return 1 + state.strengthLevel * STR_PCT + state.pietyLevel * PIETY_PCT + state.overloadLevel * OVER_PCT; }
+function strBonus()    { return state.strengthLevel * STR_PCT; }
+function pietyBonus()  { return state.pietyLevel    * PIETY_PCT; }
+function overBonus()   { return state.overloadLevel * OVER_PCT; }
+function strPrestige() { return milestoneMult(state.strengthLevel, STR_MILESTONES); }
+
+// Perk proc chances — ~0.5% per level, hard-capped at 10% (slow to max on purpose).
+const INSTA_STEP = 0.005, INSTA_CAP = 0.10, INSTA_COOLDOWN = 10000;
+const CRIT_STEP  = 0.005, CRIT_CAP  = 0.10, CRIT_MULT = 10;
+function instaChance() { return Math.min(INSTA_CAP, state.perks.instakill * INSTA_STEP); }
+function critChance()  { return Math.min(CRIT_CAP,  state.perks.crit      * CRIT_STEP); }
 
 function clickDamage() {
   const wep = WEAPONS[state.weaponTier].dmg;
-  const flat = state.strengthLevel * 2 * milestoneMult(state.strengthLevel, STR_MILESTONES);
-  return Math.max(1, Math.floor((wep + flat) * strMult()));
+  // weapon x Train Strength% x Piety% x Overloads% x Prestige  (all multiply together)
+  return Math.max(1, Math.floor(wep * clickMult() * strPrestige()));
 }
 function dps() {
   let total = 0;
@@ -470,6 +497,8 @@ function dps() {
   return Math.floor(total * famMult());
 }
 function strengthCost() { return Math.floor(15 * Math.pow(1.14, state.strengthLevel)); }
+function pietyCost()    { return Math.floor(500 * Math.pow(1.15, state.pietyLevel)); }
+function overloadCost() { return Math.floor(3000 * Math.pow(1.15, state.overloadLevel)); }
 function familiarCost(f) { return Math.floor(f.base * Math.pow(1.15, state.familiars[f.key] || 0)); }
 // Total cost to buy `n` more of a familiar (prices escalate per unit).
 function familiarCostN(f, n) {
@@ -506,6 +535,7 @@ function spawnMonster() {
 }
 
 let deadLock = false;
+let lastInstaKill = 0;   // timestamp of the last Instant Kill proc (10s cooldown)
 function damageMonster(amount, opts) {
   if (!mon || deadLock) return;
   opts = opts || {};
@@ -542,9 +572,17 @@ function killMonster() {
   refreshStats();
 }
 function onMonsterClick() {
-  if (deadLock) return;
-  const crit = Math.random() < 0.10;
-  let dmg = clickDamage(); if (crit) dmg = Math.floor(dmg * 3);
+  if (deadLock || !mon) return;
+  // Instant Kill perk — non-boss only, respects the 10s cooldown
+  if (!mon.isBoss && instaChance() > 0 && (Date.now() - lastInstaKill >= INSTA_COOLDOWN)
+      && Math.random() < instaChance()) {
+    lastInstaKill = Date.now();
+    damageMonster(mon.hp, { insta:true });
+    return;
+  }
+  // Critical Strike perk — x10 click damage, no cooldown
+  const crit = critChance() > 0 && Math.random() < critChance();
+  let dmg = clickDamage(); if (crit) dmg *= CRIT_MULT;
   damageMonster(dmg, { crit });
 }
 function dpsTick() {
@@ -578,10 +616,11 @@ function updateHp() {
     fmt(Math.max(0, Math.ceil(mon.hp))) + " / " + fmt(mon.maxHp);
 }
 function showHitsplat(amount, opts) {
+  opts = opts || {};
   const stage = document.getElementById("stage");
   const s = document.createElement("div");
-  s.className = "hitsplat" + (opts.crit ? " crit" : "") + (amount <= 0 ? " zero" : "");
-  s.textContent = fmt(Math.round(amount));
+  s.className = "hitsplat" + (opts.insta ? " insta" : opts.crit ? " crit" : "") + (amount <= 0 ? " zero" : "");
+  s.textContent = opts.insta ? "KILL!" : fmt(Math.round(amount));
   const rect = stage.getBoundingClientRect();
   s.style.left = (rect.width / 2 + (Math.random() * 70 - 35)) + "px";
   s.style.top  = (rect.height / 2 + (Math.random() * 50 - 25)) + "px";
@@ -665,7 +704,8 @@ function renderShop() {
 
   if (shopTab === "weapons") {
     WEAPONS.forEach((w, i) => {
-      if (i === 0) return;
+      // hide Fists and any tier below the one you've already bought
+      if (i === 0 || i < state.weaponTier) return;
       const owned = state.weaponTier >= i, isNext = state.weaponTier === i - 1;
       const b = mkBuy({
         ic: w.ic, c: w.c, name: w.name,
@@ -684,22 +724,49 @@ function renderShop() {
   }
 
   if (shopTab === "strength") {
-    const cost = strengthCost();
-    const lvl = state.strengthLevel;
-    const mult = milestoneMult(lvl, STR_MILESTONES), next = nextMilestone(lvl, STR_MILESTONES);
-    let boostLine;
-    if (mult > 1) boostLine = { t: "Prestige \u00d7" + mult + (next ? " \u00b7 next \u00d72 at Lv " + next : " \u00b7 MAX"), boost:true };
-    else boostLine = { t: "First prestige at Lv " + STR_MILESTONES[0], boost:true };
-    const b = mkBuy({
-      ic:"prayer", c:"#c98a3a", name:"Train Strength",
-      lines: ["+2 base click damage / level", { t:"Level " + lvl, boost:true }, boostLine],
-      cost, disabled: state.gold < cost, buyable:true,
-    });
-    b.onclick = () => { const c = strengthCost(); if (state.gold < c) return; state.gold -= c; state.strengthLevel++; afterBuy(); };
-    body.appendChild(b);
+    // 1) Train Strength — also builds Prestige
+    {
+      const lvl = state.strengthLevel, cost = strengthCost();
+      const mult = milestoneMult(lvl, STR_MILESTONES), next = nextMilestone(lvl, STR_MILESTONES);
+      const boostLine = (mult > 1)
+        ? { t: "Prestige \u00d7" + mult + (next ? " \u00b7 next \u00d72 at Lv " + next : " \u00b7 MAX"), boost:true }
+        : { t: "First prestige at Lv " + STR_MILESTONES[0], boost:true };
+      const b = mkBuy({
+        ic:"strength", c:"#c98a3a", name:"Train Strength",
+        lines: ["+" + (STR_PCT * 100) + "% click damage / level",
+                { t:"Level " + lvl + " \u00b7 +" + Math.round(strBonus() * 100) + "% dmg", boost:true }, boostLine],
+        cost, disabled: state.gold < cost, buyable:true,
+      });
+      b.onclick = () => { const c = strengthCost(); if (state.gold < c) return; state.gold -= c; state.strengthLevel++; afterBuy(); };
+      body.appendChild(b);
+    }
+    // 2) Piety
+    {
+      const lvl = state.pietyLevel, cost = pietyCost();
+      const b = mkBuy({
+        ic:"prayer", c:"#e8d070", name:"Piety",
+        lines: ["+" + (PIETY_PCT * 100) + "% click damage / level",
+                { t:"Level " + lvl + " \u00b7 +" + Math.round(pietyBonus() * 100) + "% dmg", boost:true }],
+        cost, disabled: state.gold < cost, buyable:true,
+      });
+      b.onclick = () => { const c = pietyCost(); if (state.gold < c) return; state.gold -= c; state.pietyLevel++; afterBuy(); };
+      body.appendChild(b);
+    }
+    // 3) Overloads
+    {
+      const lvl = state.overloadLevel, cost = overloadCost();
+      const b = mkBuy({
+        ic:"potion", c:"#3fa06a", name:"Overloads",
+        lines: ["+" + (OVER_PCT * 100) + "% click damage / level",
+                { t:"Level " + lvl + " \u00b7 +" + Math.round(overBonus() * 100) + "% dmg", boost:true }],
+        cost, disabled: state.gold < cost, buyable:true,
+      });
+      b.onclick = () => { const c = overloadCost(); if (state.gold < c) return; state.gold -= c; state.overloadLevel++; afterBuy(); };
+      body.appendChild(b);
+    }
     const note = document.createElement("div");
     note.style.cssText = "padding:8px 4px;color:var(--ink-dim);font-size:12px;line-height:1.5";
-    note.textContent = "Each level adds flat click damage and scales with your Prayer bonus. Reaching Lv 10, 25, 50, 75, 100\u2026 (then every +25) doubles your Strength damage \u2014 keeps clicking relevant into the late game.";
+    note.textContent = "Train Strength, Piety and Overloads add together into one click-damage bonus (they no longer compound). Train Strength also builds Prestige: Lv 10 (\u00d72), 25 (\u00d74), 50 (\u00d78)\u2026 then every +25 doubles again, and Prestige multiplies your whole click.";
     body.appendChild(note);
   }
 
@@ -743,15 +810,28 @@ function renderShop() {
 
   if (shopTab === "perks") {
     PERKS.forEach(p => {
-      const lvl = state.perks[p.key], cost = perkCost(p);
+      const lvl = state.perks[p.key];
+      const isProc = (p.key === "instakill" || p.key === "crit");
+      const chance = p.key === "instakill" ? instaChance() : p.key === "crit" ? critChance() : 0;
+      const cap    = p.key === "instakill" ? INSTA_CAP     : p.key === "crit" ? CRIT_CAP     : 0;
+      const maxed  = isProc && chance >= cap;
+      const cost = perkCost(p);
+      const lines = [p.desc, { t:"Level " + lvl, boost:true }];
+      if (isProc)
+        lines.push({ t:"Chance " + (chance * 100).toFixed(1) + "%  " + (maxed ? "(MAX)" : "(max " + (cap * 100) + "%)"), boost:true });
       const b = mkBuy({
-        ic: p.ic, c: p.c, name: p.name,
-        lines: [p.desc, { t:"Level " + lvl, boost:true }],
-        cost, disabled: state.gold < cost, buyable:true,
+        ic: p.ic, c: p.c, name: p.name, lines,
+        cost: maxed ? null : cost, owned: maxed,
+        disabled: maxed || state.gold < cost, buyable: !maxed,
+        tag: maxed ? "Maxed" : null,
       });
-      b.onclick = () => { const c = perkCost(p); if (state.gold < c) return; state.gold -= c; state.perks[p.key]++; afterBuy(); };
+      if (!maxed) b.onclick = () => { const c = perkCost(p); if (state.gold < c) return; state.gold -= c; state.perks[p.key]++; afterBuy(); };
       body.appendChild(b);
     });
+    const note = document.createElement("div");
+    note.style.cssText = "padding:8px 4px;color:var(--ink-dim);font-size:12px;line-height:1.5";
+    note.textContent = "Instant Kill and Critical Strike trigger on your clicks. Each level adds a little chance, both cap at 10%, and they climb slowly \u2014 maxing them is a long-term goal.";
+    body.appendChild(note);
   }
 }
 function afterBuy() { refreshStats(); renderShop(); save(true); }
